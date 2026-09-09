@@ -53,26 +53,43 @@ header{position:sticky;top:0;z-index:60;background:rgba(247,243,248,.92);backdro
 .pad{padding:70px 0;}
 
 /* ── MAIN ───────────────────────── */
-.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:20px;align-items:end;min-height:70vh;}
-.hero h1{font-size:clamp(42px,6.8vw,80px);line-height:1;letter-spacing:-.045em;}
-.hero h1 span{display:block;font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
-  font-size:.44em;color:var(--soft);margin-top:14px;}
-.hero-meta{margin:28px 0 44px;display:flex;flex-wrap:wrap;gap:10px 26px;font-size:13.5px;color:var(--soft);}
-.open{display:inline-flex;align-items:center;gap:7px;color:var(--plum);}
-.open::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--mint);
-  box-shadow:0 0 0 4px rgba(134,220,208,.32);}
-.hero-stage{position:relative;display:flex;align-items:flex-end;justify-content:center;}
-.hero-stage img{width:100%;max-height:70vh;object-fit:contain;object-position:bottom;}
+.hero-grid{display:grid;grid-template-columns:minmax(330px,.85fr) 1.15fr;gap:40px;align-items:center;
+  min-height:calc(100vh - 62px - 120px);}
+
+/* 상태 박스 — 흰 바탕 + 얇은 선. 위계는 2단만 */
+.state{background:var(--paper-2);border:1px solid var(--hair);padding:34px 32px 30px;}
+.state .lamp{display:inline-flex;align-items:center;gap:9px;font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,3.4vw,42px);font-weight:400;letter-spacing:.05em;line-height:1;}
+.state .lamp::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--mint);
+  box-shadow:0 0 0 5px rgba(134,220,208,.3);flex:none;}
+.state .when{font-family:'Gowun Batang',serif;font-size:19px;margin-top:14px;}
+.state dl{margin:22px 0 0;padding-top:18px;border-top:1px solid var(--hair);
+  display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:13px;color:var(--soft);}
+.state dt{color:var(--soft);}
+.state dd{margin:0;color:var(--plum);}
+.state .memo{margin:16px 0 0;font-size:11.5px;color:var(--soft);}
+.state .memo a{color:var(--violet);}
+.state .acts{margin-top:24px;display:grid;gap:8px;}
+.state .btn{margin:0;}
+
+/* 마감 상태 — <body class="closed"> 한 줄로 전체가 바뀜 */
+body.closed .state .lamp::before{background:#B9B1C6;box-shadow:0 0 0 5px rgba(185,177,198,.28);}
+body.closed .state .lamp{color:var(--soft);}
+.state .closed-only{display:none;}
+body.closed .state .closed-only{display:block;}
+body.closed .state .open-only{display:none;}
+
+.hero-stage{position:relative;display:flex;align-items:flex-end;justify-content:center;height:100%;}
+.hero-stage img{width:100%;max-height:calc(100vh - 62px - 150px);object-fit:contain;object-position:bottom;}
 .picker{position:absolute;right:0;bottom:14px;display:flex;flex-direction:column;gap:9px;}
 .picker button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--hair);cursor:pointer;transition:.25s;}
 .picker button[aria-current="true"]{background:var(--violet);transform:scale(1.5);}
-.quick{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair);}
-.quick button{text-align:left;border:0;border-left:1px solid var(--hair);background:none;font:inherit;
-  cursor:pointer;padding:26px 24px;transition:.2s;}
-.quick button:first-child{border-left:0;padding-left:0;}
-.quick button:hover{background:rgba(126,92,175,.05);}
-.quick b{display:block;font-family:'Gowun Batang',serif;font-size:17px;}
-.quick span{font-size:13px;color:var(--soft);}
+
+/* 스크롤 신호 — 아래 작업물이 살짝 걸쳐 보임 */
+.peek{padding-bottom:0;}
+.peek .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-height:120px;overflow:hidden;
+  cursor:pointer;-webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent);}
+.peek .strip img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;}
 
 /* ── WORK ───────────────────────── */
 .works{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 26px;}
@@ -166,26 +183,15 @@ select:focus,input:focus,button:focus-visible,a:focus-visible{outline:2px solid 
 .status .acts .btn{margin:0;width:auto;padding:14px 30px;}
 footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;}
 
-/* ── 팝업 ───────────────────────── */
-.modal{position:fixed;inset:0;z-index:90;display:none;place-items:center;background:rgba(36,28,49,.62);padding:20px;}
-.modal.on{display:grid;}
-.modal .box{background:var(--paper-2);max-width:400px;width:100%;padding:38px 32px;}
-.modal h3{font-size:23px;}
-.modal ul{list-style:none;padding:0;margin:16px 0 24px;font-size:14px;color:var(--soft);}
-.modal li{padding-left:15px;position:relative;margin-bottom:9px;}
-.modal li::before{content:'';position:absolute;left:0;top:12px;width:6px;height:1px;background:var(--pink);}
-.modal .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.modal .btn{margin:0;}
-
 @media (max-width:900px){
   .bar{gap:14px;flex-wrap:wrap;}
   .bar nav{gap:16px;order:3;width:100%;margin-left:0;overflow-x:auto;}
-  .hero-grid{grid-template-columns:1fr;min-height:0;}
-  .hero-stage img{max-height:52vh;}
+  .hero-grid{grid-template-columns:1fr;min-height:0;gap:26px;}
+  .hero-stage{order:2;}          /* 모바일에선 상태 박스가 캐릭터보다 위 */
+  .hero-stage img{max-height:46vh;}
   .picker{flex-direction:row;right:auto;left:50%;transform:translateX(-50%);bottom:-6px;}
-  .quick{grid-template-columns:1fr;}
-  .quick button{border-left:0;border-top:1px solid var(--hair);padding:20px 0;}
-  .quick button:first-child{border-top:0;}
+  .state{padding:28px 24px 26px;}
+  .peek .strip{grid-template-columns:repeat(2,1fr);max-height:90px;}
   .works{grid-template-columns:1fr 1fr;gap:24px 18px;}
   .price-wrap,.calc,.info-grid{grid-template-columns:1fr;gap:24px;}
   .remote{display:none;}
@@ -221,12 +227,23 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
 <div class="view on" id="v-main">
   <div class="wrap pad hero">
     <div class="hero-grid">
-      <div>
-        <h1>버츄얼 모델을<br>그리고 움직입니다<span>Illustration &amp; Live2D Rigging</span></h1>
-        <div class="hero-meta">
-          <span class="open">커미션 OPEN</span>
-          <span>예상 시작 2026년 10월</span>
-          <span>일러 3~4주 · 리깅 3~4주</span>
+      <div class="state">
+        <div class="lamp"><span class="open-only">OPEN</span><span class="closed-only">CLOSED</span></div>
+        <div class="when open-only">예상 시작 · 2026년 10월</div>
+        <div class="when closed-only">다음 오픈 미정</div>
+        <dl>
+          <dt>일러스트</dt><dd>3~4주</dd>
+          <dt>Live2D</dt><dd>3~4주</dd>
+        </dl>
+        <p class="memo open-only">자세한 사항은 <a data-go="info" href="#info">INFO</a>를 확인해 주세요.</p>
+        <p class="memo closed-only">다음 오픈은 <a href="https://x.com/uhi_on" target="_blank" rel="noopener">트위터</a>로 공지됩니다.</p>
+        <div class="acts open-only">
+          <a class="btn" href="#" target="_blank">신청하기</a>
+          <button class="btn line" data-go="price">견적 계산</button>
+        </div>
+        <div class="acts closed-only">
+          <a class="btn" href="https://x.com/uhi_on" target="_blank" rel="noopener">트위터 보기</a>
+          <button class="btn line" data-go="price">가격 보기</button>
         </div>
       </div>
       <div class="hero-stage">
@@ -235,12 +252,8 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
       </div>
     </div>
   </div>
-  <div class="wrap">
-    <div class="quick">
-      <button data-go="work"><b>작업물</b><span>지금까지 만든 모델</span></button>
-      <button data-go="price"><b>가격 · 견적</b><span>등급과 옵션, 바로 계산</span></button>
-      <button data-go="apply"><b>신청</b><span>커미션 접수 중</span></button>
-    </div>
+  <div class="wrap peek">
+    <div class="strip" id="peek" data-go="work"></div>
   </div>
 </div>
 
@@ -265,7 +278,6 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
 
         <section class="block" id="p-rig">
           <div class="title"><h2>리깅</h2><em>Rigging</em></div>
-          <p class="lede">등급 차이는 움직이는 범위와 물리 표현입니다. 그림 퀄리티는 모든 등급이 같습니다.</p>
           <div class="tiers" id="tierCards"></div>
           <table id="tblRig"></table>
           <div class="foot" id="noteRig"></div>
@@ -273,7 +285,6 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
 
         <section class="block" id="p-calc">
           <div class="title"><h2>견적 계산</h2><em>Estimate</em></div>
-          <p class="lede">항목을 고르면 금액이 바로 계산됩니다. 실제 견적은 작업량에 따라 조정될 수 있습니다.</p>
           <div class="calc">
             <div>
               <div class="field"><label for="selIllust">일러스트</label><select id="selIllust"></select></div>
@@ -429,22 +440,6 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
   </div>
 </div>
 
-<!-- 팝업 -->
-<div class="modal" id="modal">
-  <div class="box">
-    <h3>가격표가 새로워졌어요</h3>
-    <ul>
-      <li>일러 · 리깅 전 항목 단가 조정</li>
-      <li>리깅에 프로 등급이 새로 생겼습니다</li>
-      <li>세트 할인 — 비기닝 10 · 프로 15 · 프리미엄 20</li>
-    </ul>
-    <div class="acts">
-      <button class="btn line" id="mClose">닫기</button>
-      <button class="btn" id="mGo">가격 보기</button>
-    </div>
-  </div>
-</div>
-
 <script>
 /* ============================================================
    [데이터] 가격·옵션·작업물이 전부 여기 모여 있음.
@@ -589,7 +584,6 @@ $('#works').innerHTML = DATA.works.map(w=>`
     <article class="tier ${r.grade==='pro'?'pick':''}">
       <div class="shot"><img class="art" src="images/${DATA.tierShot[r.grade]}.jpg" alt=""
            loading="lazy" onerror="this.parentElement.style.display='none'"></div>
-      ${r.grade==='pro'?'<span class="flag">가장 많이 선택하는 등급</span>':''}
       <h3>${r.name.replace(' (전신)','')}</h3>
       <div class="price">${r.price}<b> 만원</b></div>
       <ul>${specs[r.grade].map(s=>`<li>${s}</li>`).join('')}</ul>
@@ -708,17 +702,11 @@ $('#works').innerHTML = DATA.works.map(w=>`
 })();
 
 /* ------------------------------------------------------------
-   팝업 — 첫 방문 1회
+   MAIN 아래 미리보기 — 작업물 4장을 살짝 보여줌 (스크롤 신호)
    ------------------------------------------------------------ */
-(function popup(){
-  const m = $('#modal');
-  if(!sessionStorage.getItem('uhion_seen')) setTimeout(()=>m.classList.add('on'), 600);
-  const close = ()=>{ m.classList.remove('on'); sessionStorage.setItem('uhion_seen','1'); };
-  $('#mClose').onclick = close;
-  $('#mGo').onclick = ()=>{ close(); go('price'); };
-  m.onclick = e => { if(e.target===m) close(); };
-  document.addEventListener('keydown', e => { if(e.key==='Escape') close(); });
-})();
+$('#peek').innerHTML = DATA.works.slice(0,4).map(w=>
+  `<img class="art" src="images/${w.name}.jpg" alt="" loading="lazy"
+        onerror="this.style.visibility='hidden'">`).join('');
 </script>
 </body>
 </html>
