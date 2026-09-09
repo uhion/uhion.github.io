@@ -53,13 +53,24 @@ header{position:sticky;top:0;z-index:60;background:rgba(247,243,248,.92);backdro
 .pad{padding:70px 0;}
 
 /* ── MAIN ───────────────────────── */
-.hero-grid{display:grid;grid-template-columns:minmax(330px,.85fr) 1.15fr;gap:40px;align-items:center;
+.hero-grid{display:grid;grid-template-columns:1.05fr minmax(300px,.75fr);gap:44px;align-items:center;
   min-height:calc(100vh - 62px - 120px);}
 
-/* 상태 박스 — 흰 바탕 + 얇은 선. 위계는 2단만 */
+/* 왼쪽 — 쇼케이스 시트가 한 장씩 넘어감 */
+.sheet{position:relative;cursor:zoom-in;}
+.sheet .frame{position:relative;aspect-ratio:2/3;max-height:calc(100vh - 62px - 150px);
+  margin:0 auto;overflow:hidden;background:var(--paper-2);border:1px solid var(--hair);}
+.sheet .frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .8s ease;}
+.sheet .frame img.show{opacity:1;}
+.picker{position:absolute;left:50%;transform:translateX(-50%);bottom:-24px;display:flex;gap:9px;}
+.picker button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:var(--hair);cursor:pointer;transition:.25s;}
+.picker button[aria-current="true"]{background:var(--violet);transform:scale(1.5);}
+
+/* 오른쪽 — 상태 박스 */
 .state{background:var(--paper-2);border:1px solid var(--hair);padding:34px 32px 30px;}
 .state .lamp{display:inline-flex;align-items:center;gap:9px;font-family:'Cormorant Garamond',serif;
-  font-size:clamp(30px,3.4vw,42px);font-weight:400;letter-spacing:.05em;line-height:1;}
+  font-size:clamp(30px,3.2vw,40px);font-weight:400;letter-spacing:.05em;line-height:1;}
 .state .lamp::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--mint);
   box-shadow:0 0 0 5px rgba(134,220,208,.3);flex:none;}
 .state .when{font-family:'Gowun Batang',serif;font-size:19px;margin-top:14px;}
@@ -79,22 +90,25 @@ body.closed .state .lamp{color:var(--soft);}
 body.closed .state .closed-only{display:block;}
 body.closed .state .open-only{display:none;}
 
-.hero-stage{position:relative;display:flex;align-items:flex-end;justify-content:center;height:100%;}
-.hero-stage img{width:100%;max-height:calc(100vh - 62px - 150px);object-fit:contain;object-position:bottom;}
-.picker{position:absolute;right:0;bottom:14px;display:flex;flex-direction:column;gap:9px;}
-.picker button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--hair);cursor:pointer;transition:.25s;}
-.picker button[aria-current="true"]{background:var(--violet);transform:scale(1.5);}
-
-/* 스크롤 신호 — 아래 작업물이 살짝 걸쳐 보임 */
-.peek{padding-bottom:0;}
-.peek .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-height:120px;overflow:hidden;
-  cursor:pointer;-webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent);}
-.peek .strip img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;}
+/* 크게보기 — 화면 전체에 시트를 띄우고 좌우로 넘김 */
+.viewer{position:fixed;inset:0;z-index:100;display:none;background:rgba(28,22,38,.94);}
+.viewer.on{display:block;}
+.viewer img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  max-width:min(92vw,760px);max-height:94vh;object-fit:contain;}
+.viewer .nav{position:absolute;top:0;bottom:0;width:32%;border:0;background:none;cursor:pointer;
+  color:#fff;font-size:26px;opacity:.45;transition:.2s;font-family:'Cormorant Garamond',serif;}
+.viewer .nav:hover{opacity:1;}
+.viewer .prev{left:0;} .viewer .next{right:0;}
+.viewer .close{position:absolute;top:20px;right:24px;border:0;background:none;color:#fff;
+  font-size:26px;cursor:pointer;opacity:.6;line-height:1;}
+.viewer .close:hover{opacity:1;}
+.viewer .label{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#CFC6DD;
+  font-size:12.5px;letter-spacing:.08em;}
 
 /* ── WORK ───────────────────────── */
 .works{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 26px;}
 .work figure{margin:0;}
-.work img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;}
+.work img{width:100%;aspect-ratio:2/3;object-fit:cover;cursor:zoom-in;border:1px solid var(--hair);}
 .work figcaption{margin-top:8px;display:flex;justify-content:space-between;align-items:baseline;
   border-top:1px solid var(--hair);padding-top:8px;font-size:13.5px;}
 .work figcaption em{font-style:normal;color:var(--soft);font-size:12px;}
@@ -186,12 +200,11 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
 @media (max-width:900px){
   .bar{gap:14px;flex-wrap:wrap;}
   .bar nav{gap:16px;order:3;width:100%;margin-left:0;overflow-x:auto;}
-  .hero-grid{grid-template-columns:1fr;min-height:0;gap:26px;}
-  .hero-stage{order:2;}          /* 모바일에선 상태 박스가 캐릭터보다 위 */
-  .hero-stage img{max-height:46vh;}
-  .picker{flex-direction:row;right:auto;left:50%;transform:translateX(-50%);bottom:-6px;}
+  .hero-grid{grid-template-columns:1fr;min-height:0;gap:44px;}
+  .sheet{order:2;}               /* 모바일에선 상태 박스가 시트보다 위 */
+  .sheet .frame{max-height:56vh;}
   .state{padding:28px 24px 26px;}
-  .peek .strip{grid-template-columns:repeat(2,1fr);max-height:90px;}
+  .viewer .nav{width:24%;}
   .works{grid-template-columns:1fr 1fr;gap:24px 18px;}
   .price-wrap,.calc,.info-grid{grid-template-columns:1fr;gap:24px;}
   .remote{display:none;}
@@ -227,6 +240,10 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
 <div class="view on" id="v-main">
   <div class="wrap pad hero">
     <div class="hero-grid">
+      <div class="sheet" id="sheet">
+        <div class="frame" id="sheetFrame"></div>
+        <div class="picker" id="picker"></div>
+      </div>
       <div class="state">
         <div class="lamp"><span class="open-only">OPEN</span><span class="closed-only">CLOSED</span></div>
         <div class="when open-only">예상 시작 · 2026년 10월</div>
@@ -246,14 +263,7 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
           <button class="btn line" data-go="price">가격 보기</button>
         </div>
       </div>
-      <div class="hero-stage">
-        <img class="art" id="heroImg" src="images/홍율.jpg" alt="">
-        <div class="picker" id="picker"></div>
-      </div>
     </div>
-  </div>
-  <div class="wrap peek">
-    <div class="strip" id="peek" data-go="work"></div>
   </div>
 </div>
 
@@ -440,6 +450,14 @@ footer{padding:26px 0 40px;font-size:12px;color:#8D849F;display:flex;justify-con
   </div>
 </div>
 
+<div class="viewer" id="viewer">
+  <img id="viewerImg" alt="">
+  <button class="nav prev" id="vPrev" aria-label="이전">&#10094;</button>
+  <button class="nav next" id="vNext" aria-label="다음">&#10095;</button>
+  <button class="close" id="vClose" aria-label="닫기">&times;</button>
+  <div class="label" id="vLabel"></div>
+</div>
+
 <script>
 /* ============================================================
    [데이터] 가격·옵션·작업물이 전부 여기 모여 있음.
@@ -504,14 +522,17 @@ const DATA = {
       {name:'모델 삼면도', il:40, rg:0}
     ]}
   ],
+  /* 작업물 — 위에 있는 것이 먼저 보임. 새 작업은 맨 위에 한 줄 추가하면 됨.
+     date 는 화면에 표시되는 값이라 형식을 자유롭게 써도 됨 */
   works:[
-    {name:'홍율', year:'2026'},
-    {name:'트로이메라이', year:'2026'},
-    {name:'유키', year:'2026'},
-    {name:'여니언', year:'2026'},
-    {name:'유단', year:'2026'},
-    {name:'홍연시', year:'2026'}
+    {name:'홍율',        date:'2026.08'},
+    {name:'트로이메라이', date:'2026.07'},
+    {name:'유키',        date:'2026.06'},
+    {name:'여니언',      date:'2026.05'},
+    {name:'유단',        date:'2026.04'},
+    {name:'홍연시',      date:'2026.03'}
   ],
+  /* 등급 카드 이미지 — images/ 안의 파일명. 등급에 맞는 모델로 바꾸면 됨 */
   tierShot:{beginning:'유키-face', pro:'홍율-face', premium:'트로이메라이-face'}
 };
 
@@ -540,36 +561,75 @@ if(location.hash){
 }
 
 /* ------------------------------------------------------------
-   MAIN — 캐릭터 8초마다 교체
+   크게보기 — 시트를 화면 가득 띄우고 좌우로 넘김.
+   MAIN 과 WORK 가 같은 뷰어를 함께 씀
    ------------------------------------------------------------ */
-(function hero(){
-  const img = $('#heroImg'), picker = $('#picker');
-  let i = 0, timer;
+const viewer = (function(){
+  const box=$('#viewer'), img=$('#viewerImg'), label=$('#vLabel');
+  let i=0;
+  function show(n){
+    i=(n+DATA.works.length)%DATA.works.length;
+    const w=DATA.works[i];
+    img.src='images/sheet/'+w.name+'.jpg';
+    label.textContent=w.name+' · '+w.date;
+  }
+  function open(n){ show(n); box.classList.add('on'); document.body.style.overflow='hidden'; }
+  function close(){ box.classList.remove('on'); document.body.style.overflow=''; }
+  $('#vPrev').onclick=e=>{ e.stopPropagation(); show(i-1); };
+  $('#vNext').onclick=e=>{ e.stopPropagation(); show(i+1); };
+  $('#vClose').onclick=close;
+  box.onclick=e=>{ if(e.target===box||e.target===img) close(); };
+  document.addEventListener('keydown',e=>{
+    if(!box.classList.contains('on')) return;
+    if(e.key==='Escape') close();
+    if(e.key==='ArrowLeft') show(i-1);
+    if(e.key==='ArrowRight') show(i+1);
+  });
+  return {open};
+})();
+
+/* ------------------------------------------------------------
+   MAIN 시트 — 6초마다 한 장씩 넘어감.
+   이미지를 미리 다 만들어두고 보이는 것만 바꾸는 방식이라
+   넘어갈 때 깜빡이지 않고 부드럽게 겹쳐짐
+   ------------------------------------------------------------ */
+(function sheet(){
+  const frame=$('#sheetFrame'), picker=$('#picker');
+  let i=0, timer;
+
+  frame.innerHTML = DATA.works.map(w=>
+    `<img src="images/sheet/${w.name}-s.jpg" alt="${w.name}">`).join('');
+
   DATA.works.forEach((w,n)=>{
-    const b = document.createElement('button');
-    b.setAttribute('aria-label', w.name);
-    b.onclick = ()=>{ show(n); reset(); };
+    const b=document.createElement('button');
+    b.setAttribute('aria-label',w.name);
+    b.onclick=e=>{ e.stopPropagation(); show(n); reset(); };
     picker.appendChild(b);
   });
+
   function show(n){
-    i = n;
-    img.src = 'images/' + DATA.works[n].name + '.jpg';
-    [...picker.children].forEach((b,k)=>b.setAttribute('aria-current', k===n));
+    i=n;
+    [...frame.children].forEach((im,k)=>im.classList.toggle('show',k===n));
+    [...picker.children].forEach((b,k)=>b.setAttribute('aria-current',k===n));
   }
-  function reset(){ clearInterval(timer); timer = setInterval(()=>show((i+1)%DATA.works.length), 8000); }
-  img.onerror = ()=> img.style.visibility='hidden';
+  function reset(){ clearInterval(timer); timer=setInterval(()=>show((i+1)%DATA.works.length),6000); }
+
+  $('#sheet').onclick=()=>viewer.open(i);   // 클릭하면 지금 보이는 장을 크게
   show(0); reset();
 })();
 
 /* ------------------------------------------------------------
-   WORK
+   WORK — 목록. 누르면 같은 뷰어로 크게 보임
    ------------------------------------------------------------ */
-$('#works').innerHTML = DATA.works.map(w=>`
+$('#works').innerHTML = DATA.works.map((w,n)=>`
   <div class="work"><figure>
-    <img class="art" src="images/${w.name}.jpg" alt="${w.name}" loading="lazy"
-         onerror="this.style.visibility='hidden'">
-    <figcaption><span>${w.name}</span><em>${w.year}</em></figcaption>
+    <img src="images/sheet/${w.name}-s.jpg" alt="${w.name}" loading="lazy" data-open="${n}">
+    <figcaption><span>${w.name}</span><em>${w.date}</em></figcaption>
   </figure></div>`).join('');
+$('#works').addEventListener('click', e=>{
+  const t=e.target.closest('[data-open]');
+  if(t) viewer.open(+t.dataset.open);
+});
 
 /* ------------------------------------------------------------
    PRICE — 등급 카드 + 표 두 개
@@ -701,12 +761,6 @@ $('#works').innerHTML = DATA.works.map(w=>`
   calc();
 })();
 
-/* ------------------------------------------------------------
-   MAIN 아래 미리보기 — 작업물 4장을 살짝 보여줌 (스크롤 신호)
-   ------------------------------------------------------------ */
-$('#peek').innerHTML = DATA.works.slice(0,4).map(w=>
-  `<img class="art" src="images/${w.name}.jpg" alt="" loading="lazy"
-        onerror="this.style.visibility='hidden'">`).join('');
 </script>
 </body>
 </html>
