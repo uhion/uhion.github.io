@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UHI:ON — Live2D Illustration · Rigging</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#FBF5F9;        /* 지면 — 아주 옅은 핑크 */
+  --band:#F6E6F0;         /* 색면 1 — 연핑크 */
+  --band-2:#EDE6FA;       /* 색면 2 — 연보라 */
+  --white:#FFFFFF;
+  --ink:#2E2440;
+  --soft:#8A7F9C;
+  --violet:#7E5CAF;
+  --violet-d:#5F418C;
+  --pink:#F0A5C4;
+  --mint:#86DCD0;
+  --hair:#E7DCEE;
+  --wrap:1180px;
+  --r:22px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;color:var(--ink);background:var(--paper);
+  font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  font-size:15px;line-height:1.75;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+h1,h2,h3{margin:0;font-family:'Gowun Batang',serif;font-weight:700;letter-spacing:-.035em;line-height:1.2;}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 30px;}
+
+/* 옅은 격자 — 빈 곳이 죽어 보이지 않게 */
+.grid-bg{
+  background-image:linear-gradient(rgba(126,92,175,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(126,92,175,.045) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+
+/* ── 상단 바 ─────────────────────────── */
+header{position:sticky;top:0;z-index:60;background:rgba(251,245,249,.93);backdrop-filter:blur(10px);}
+.bar{max-width:var(--wrap);margin:0 auto;padding:16px 30px;display:flex;align-items:center;gap:30px;}
+.mark{font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:600;letter-spacing:.16em;
+  text-decoration:none;cursor:pointer;}
+.bar nav{margin-left:auto;display:flex;gap:6px;}
+.bar nav button{border:0;background:none;font:inherit;cursor:pointer;color:var(--soft);
+  font-size:13px;letter-spacing:.1em;padding:7px 14px;border-radius:999px;transition:.2s;}
+.bar nav button:hover{color:var(--violet);background:rgba(126,92,175,.07);}
+.bar nav button[aria-current="true"]{color:var(--white);background:var(--violet);}
+.lang{display:flex;gap:1px;font-family:'Cormorant Garamond',serif;font-size:15px;}
+.lang button{border:0;background:none;font:inherit;color:var(--soft);cursor:pointer;padding:2px 5px;}
+.lang button[aria-pressed="true"]{color:var(--violet);text-decoration:underline;text-underline-offset:4px;}
+
+/* ── 화면 전환 ─────────────────────────── */
+.view{display:none;}
+.view.on{display:block;}
+.pad{padding:64px 0 90px;}
+.title{font-size:clamp(30px,4.4vw,52px);margin-bottom:8px;}
+.title-row{display:flex;align-items:baseline;gap:16px;margin-bottom:34px;flex-wrap:wrap;}
+.title-row em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--violet);}
+
+/* ── MAIN ─────────────────────────── */
+.stage{padding:34px 0 70px;}
+.main-grid{display:grid;grid-template-columns:1.5fr .95fr;gap:26px;align-items:stretch;}
+
+/* 흐르는 쇼케이스 */
+.reel{position:relative;overflow:hidden;border-radius:var(--r);background:var(--band);padding:22px 0;}
+.reel::before,.reel::after{content:'';position:absolute;top:0;bottom:0;width:52px;z-index:2;pointer-events:none;}
+.reel::before{left:0;background:linear-gradient(90deg,var(--band),transparent);}
+.reel::after{right:0;background:linear-gradient(-90deg,var(--band),transparent);}
+.track{display:flex;gap:16px;width:max-content;animation:flow 46s linear infinite;padding:0 8px;}
+.reel:hover .track,.reel:focus-within .track,.track.hold{animation-play-state:paused;}
+@keyframes flow{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion:reduce){.track{animation:none;}}
+.track figure{margin:0;flex:0 0 clamp(168px,15.5vw,236px);cursor:zoom-in;}
+.track img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:14px;
+  background:var(--white);transition:transform .3s ease;}
+.track figure:hover img{transform:translateY(-5px);}
+.track figcaption{margin-top:9px;font-size:12.5px;color:var(--ink);display:flex;justify-content:space-between;}
+.track figcaption em{font-style:normal;color:var(--soft);font-family:'Cormorant Garamond',serif;font-size:14px;}
+
+/* 상태 박스 */
+.state{background:var(--white);border-radius:var(--r);padding:36px 34px 32px;display:flex;flex-direction:column;}
+.state .lamp{display:inline-flex;align-items:center;gap:11px;font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,3.6vw,46px);font-weight:500;letter-spacing:.04em;line-height:1;}
+.state .lamp::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--mint);
+  box-shadow:0 0 0 6px rgba(134,220,208,.28);flex:none;}
+.state .when{font-family:'Gowun Batang',serif;font-size:21px;margin-top:16px;}
+.state dl{margin:auto 0 0;padding:22px 0;display:grid;grid-template-columns:auto 1fr;gap:7px 20px;font-size:13.5px;}
+.state dt{color:var(--soft);}
+.state dd{margin:0;}
+.state .memo{margin:0 0 20px;font-size:12px;color:var(--soft);}
+.state .memo a{color:var(--violet);}
+.state .acts{display:grid;gap:9px;}
+body.closed .state .lamp::before{background:#C3BBCE;box-shadow:0 0 0 6px rgba(195,187,206,.3);}
+body.closed .state .lamp{color:var(--soft);}
+.state .closed-only{display:none;}
+body.closed .state .closed-only{display:block;}
+body.closed .state .open-only{display:none;}
+
+/* 아래 띠 — 다음 화면으로 넘어가는 안내 */
+.ribbon{background:var(--band-2);border-radius:var(--r);margin-top:22px;padding:26px 34px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.ribbon b{font-family:'Gowun Batang',serif;font-size:19px;font-weight:700;}
+.ribbon span{color:var(--soft);font-size:13.5px;}
+.ribbon .go{margin-left:auto;display:flex;gap:9px;}
+
+/* ── 버튼 ─────────────────────────── */
+.btn{display:block;width:100%;text-align:center;text-decoration:none;cursor:pointer;font:inherit;
+  font-size:14.5px;font-weight:600;padding:14px 22px;border:0;border-radius:999px;
+  background:var(--violet);color:var(--white);transition:.2s;}
+.btn:hover{background:var(--violet-d);}
+.btn.line{background:var(--white);color:var(--violet);box-shadow:inset 0 0 0 1.5px var(--violet);}
+.btn.line:hover{background:#F5EFFC;}
+.btn.sm{width:auto;padding:11px 22px;font-size:13.5px;}
+button:focus-visible,a:focus-visible,select:focus,input:focus{outline:2.5px solid var(--mint);outline-offset:2px;}
+
+/* ── WORK ─────────────────────────── */
+.works{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 24px;}
+.works figure{margin:0;}
+.works img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:16px;background:var(--white);
+  cursor:zoom-in;transition:transform .3s ease;}
+.works figure:hover img{transform:translateY(-6px);}
+.works figcaption{margin-top:11px;display:flex;justify-content:space-between;align-items:baseline;font-size:14px;}
+.works figcaption em{font-style:normal;color:var(--soft);font-family:'Cormorant Garamond',serif;font-size:15px;}
+
+/* ── PRICE ─────────────────────────── */
+.price-wrap{display:grid;grid-template-columns:1fr 152px;gap:52px;align-items:start;}
+.remote{position:sticky;top:104px;font-size:13px;}
+.remote a{display:block;text-decoration:none;color:var(--soft);padding:8px 0 8px 16px;
+  border-left:2px solid var(--hair);transition:.2s;}
+.remote a:hover{color:var(--ink);}
+.remote a.here{color:var(--violet);border-color:var(--violet);font-weight:600;}
+.block{padding-bottom:70px;}
+.block h2{font-size:clamp(26px,3.2vw,38px);margin-bottom:22px;}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
+.tier{background:var(--white);border-radius:var(--r);padding:28px 26px;}
+.tier.pick{background:var(--band);}
+.tier h3{font-size:20px;}
+.tier .amt{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:400;color:var(--violet);
+  line-height:1;margin:8px 0 0;}
+.tier .amt b{font-family:'Pretendard Variable',sans-serif;font-size:13px;font-weight:500;color:var(--soft);}
+.tier ul{list-style:none;margin:18px 0 0;padding:0;font-size:13.5px;color:var(--soft);}
+.tier li{padding-left:16px;position:relative;margin-bottom:9px;}
+.tier li::before{content:'';position:absolute;left:0;top:11px;width:7px;height:1px;background:var(--pink);}
+.tier .shot{aspect-ratio:3/4;overflow:hidden;border-radius:14px;margin-bottom:18px;}
+.tier .shot img{width:100%;height:100%;object-fit:cover;}
+
+.card{background:var(--white);border-radius:var(--r);padding:12px 26px;}
+table{width:100%;border-collapse:collapse;font-size:14.5px;}
+th,td{padding:16px 6px;border-bottom:1px solid var(--hair);text-align:left;vertical-align:top;}
+tr:last-child td{border-bottom:0;}
+th{font-size:12px;color:var(--soft);font-weight:500;letter-spacing:.05em;}
+.num{text-align:right;white-space:nowrap;}
+td.num{font-family:'Cormorant Garamond',serif;font-size:25px;color:var(--violet);}
+td small{display:block;color:var(--soft);font-size:12.5px;margin-top:3px;}
+.foot{margin-top:20px;font-size:13px;color:var(--soft);}
+.foot p{margin:0 0 7px;padding-left:16px;position:relative;}
+.foot p::before{content:'';position:absolute;left:0;top:11px;width:7px;height:1px;background:var(--mint);}
+
+.calc{display:grid;grid-template-columns:1fr 312px;gap:38px;align-items:start;}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:12.5px;color:var(--soft);margin-bottom:7px;}
+select,input[type=number]{width:100%;font:inherit;font-size:14.5px;color:var(--ink);background:var(--white);
+  padding:13px 15px;border:1px solid var(--hair);border-radius:12px;}
+.grp{margin-top:26px;}
+.grp h4{margin:0 0 6px;font-size:12.5px;color:var(--violet);font-weight:600;letter-spacing:.05em;}
+.opt{display:grid;grid-template-columns:1fr 62px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair);}
+.opt span{font-size:14px;}
+.opt span i{font-style:normal;color:var(--soft);font-size:11.5px;}
+.opt input{padding:7px 4px;text-align:center;border-radius:9px;}
+.sum{position:sticky;top:104px;background:var(--white);border-radius:var(--r);padding:28px;}
+.sum .row{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:5px 0;color:var(--soft);}
+.sum .row b{color:var(--ink);font-weight:500;font-family:'Cormorant Garamond',serif;font-size:17px;}
+.sum .tot{margin-top:16px;padding-top:16px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;align-items:baseline;}
+.sum .tot span{font-size:13px;color:var(--soft);}
+.sum .tot strong{font-family:'Cormorant Garamond',serif;font-size:50px;font-weight:400;color:var(--violet);line-height:1;}
+.sum .btn{margin-top:18px;}
+.sum .btn+.btn{margin-top:9px;}
+.hint{font-size:11.5px;color:var(--soft);margin:12px 0 0;}
+
+/* ── INFO ─────────────────────────── */
+.info-grid{display:grid;grid-template-columns:190px 1fr;gap:44px;align-items:start;
+  background:var(--white);border-radius:var(--r);padding:34px 32px;margin-bottom:16px;}
+.info-grid h3{font-size:20px;}
+.info-grid ul{list-style:none;margin:0;padding:0;font-size:14px;color:var(--soft);}
+.info-grid li{padding-left:16px;position:relative;margin-bottom:9px;}
+.info-grid li::before{content:'';position:absolute;left:0;top:12px;width:7px;height:1px;background:var(--hair);}
+.steps{display:flex;flex-wrap:wrap;gap:8px;}
+.steps span{font-size:12.5px;color:var(--soft);padding:8px 15px;border-radius:999px;background:var(--paper);}
+.steps span.on2{color:var(--violet);background:var(--band);}
+.info-grid table{font-size:14px;}
+.sub{color:var(--soft);font-size:13.5px;margin:0 0 12px;}
+
+/* ── APPLY ─────────────────────────── */
+.apply-box{background:var(--band);border-radius:var(--r);padding:clamp(50px,8vw,96px) 30px;text-align:center;}
+.apply-box .big{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,7vw,78px);font-weight:400;
+  letter-spacing:.03em;line-height:1.05;}
+.apply-box .big i{font-style:normal;color:var(--violet);}
+.apply-box p{color:var(--soft);margin:14px 0 34px;font-size:14.5px;}
+.apply-box .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+footer{padding:34px 0 46px;font-size:12.5px;color:var(--soft);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+
+/* ── 크게보기 ─────────────────────────── */
+.viewer{position:fixed;inset:0;z-index:100;display:none;background:rgba(40,30,54,.93);}
+.viewer.on{display:block;}
+.viewer img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  max-width:min(92vw,700px);max-height:92vh;border-radius:10px;}
+.viewer .nav{position:absolute;top:0;bottom:0;width:30%;border:0;background:none;cursor:pointer;
+  color:#fff;font-size:30px;opacity:.4;transition:.2s;}
+.viewer .nav:hover{opacity:1;}
+.viewer .prev{left:0;} .viewer .next{right:0;}
+.viewer .close{position:absolute;top:22px;right:26px;border:0;background:none;color:#fff;
+  font-size:28px;cursor:pointer;opacity:.6;line-height:1;}
+.viewer .close:hover{opacity:1;}
+.viewer .label{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#D8CFE4;font-size:13px;}
+.viewer .label button{border:0;background:none;color:var(--mint);font:inherit;cursor:pointer;margin-left:14px;}
+
+@media (max-width:940px){
+  .bar{gap:14px;flex-wrap:wrap;padding:12px 20px;}
+  .bar nav{order:3;width:100%;margin-left:0;overflow-x:auto;gap:2px;}
+  .main-grid{grid-template-columns:1fr;}
+  .state{order:-1;}
+  .track figure{flex-basis:150px;}
+  .works{grid-template-columns:1fr 1fr;gap:20px 14px;}
+  .price-wrap,.calc{grid-template-columns:1fr;gap:26px;}
+  .remote{display:none;}
+  .sum{position:static;}
+  .tiers{grid-template-columns:1fr;}
+  .info-grid{grid-template-columns:1fr;gap:18px;padding:26px 22px;}
+  .ribbon{padding:22px;}
+  .ribbon .go{margin-left:0;width:100%;}
+  .pad{padding:40px 0 64px;}
+  .viewer .nav{width:22%;}
+}
+</style>
+</head>
+<body class="grid-bg">
+
+<header>
+  <div class="bar">
+    <a class="mark" data-go="main">UHI:ON</a>
+    <nav id="menu">
+      <button data-go="main" aria-current="true">MAIN</button>
+      <button data-go="work">WORK</button>
+      <button data-go="price">PRICE</button>
+      <button data-go="info">INFO</button>
+      <button data-go="apply">APPLY</button>
+    </nav>
+    <div class="lang">
+      <button aria-pressed="true">KR</button><button aria-pressed="false">EN</button><button aria-pressed="false">JP</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<div class="view on" id="v-main">
+  <div class="wrap stage">
+    <div class="main-grid">
+      <div class="reel" id="reel">
+        <div class="track" id="track"></div>
+      </div>
+      <aside class="state">
+        <div class="lamp"><span class="open-only">OPEN</span><span class="closed-only">CLOSED</span></div>
+        <div class="when open-only">예상 시작 · 2026년 10월</div>
+        <div class="when closed-only">다음 오픈 미정</div>
+        <dl>
+          <dt>일러스트</dt><dd>3~4주</dd>
+          <dt>Live2D</dt><dd>3~4주</dd>
+          <dt>결제</dt><dd>예약금 10% · 잔금 완성 후</dd>
+        </dl>
+        <p class="memo open-only">자세한 사항은 <a data-go="info" href="#info">INFO</a>를 확인해 주세요.</p>
+        <p class="memo closed-only">다음 오픈은 <a href="https://x.com/uhi_on" target="_blank" rel="noopener">트위터</a>로 공지됩니다.</p>
+        <div class="acts open-only">
+          <a class="btn" href="#" target="_blank">신청하기</a>
+          <button class="btn line" data-go="price">견적 계산</button>
+        </div>
+        <div class="acts closed-only">
+          <a class="btn" href="https://x.com/uhi_on" target="_blank" rel="noopener">트위터 보기</a>
+          <button class="btn line" data-go="price">가격 보기</button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="ribbon">
+      <b>지금까지 만든 모델</b>
+      <span>일러스트부터 리깅까지 함께 작업합니다</span>
+      <div class="go">
+        <button class="btn sm line" data-go="work">작업물 보기</button>
+        <button class="btn sm" data-go="price">가격 보기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WORK ══ -->
+<div class="view" id="v-work">
+  <div class="wrap pad">
+    <div class="title-row"><h1 class="title">작업물</h1><em>Selected work</em></div>
+    <div class="works" id="works"></div>
+  </div>
+</div>
+
+<!-- ══ PRICE ══ -->
+<div class="view" id="v-price">
+  <div class="wrap pad">
+    <div class="price-wrap">
+      <div>
+        <section class="block" id="p-illust">
+          <h2>일러스트</h2>
+          <div class="card"><table id="tblIllust"></table></div>
+          <div class="foot" id="noteIllust"></div>
+        </section>
+
+        <section class="block" id="p-rig">
+          <h2>리깅</h2>
+          <div class="tiers" id="tierCards"></div>
+          <div class="card"><table id="tblRig"></table></div>
+          <div class="foot" id="noteRig"></div>
+        </section>
+
+        <section class="block" id="p-calc">
+          <h2>견적 계산</h2>
+          <div class="calc">
+            <div class="card" style="padding:26px">
+              <div class="field"><label for="selIllust">일러스트</label><select id="selIllust"></select></div>
+              <div class="field"><label for="selRig">리깅</label><select id="selRig"></select></div>
+              <div id="optArea"></div>
+              <div class="grp">
+                <h4>그 외</h4>
+                <div class="field" style="margin-top:12px">
+                  <label for="selRush">빠른마감</label>
+                  <select id="selRush">
+                    <option value="0">선택 안 함</option>
+                    <option value="0.5">기간 절반에 납품 (+50%)</option>
+                    <option value="0.8">기간 1/3에 납품 (+80%)</option>
+                    <option value="0.9">기간 1/4에 납품 (+90%)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="selRights">사용 범위</label>
+                  <select id="selRights">
+                    <option value="none">방송용 (추가금 없음)</option>
+                    <option value="personal">개인세 (30 + 일러 금액의 10%)</option>
+                    <option value="corp">법인세 (별도 문의)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="numHide">공개 연기 (개월 · 1개월당 5)</label>
+                  <input type="number" id="numHide" min="0" max="12" step="1" value="0">
+                </div>
+              </div>
+            </div>
+            <div class="sum">
+              <div id="sumRows"></div>
+              <div class="tot"><span>합계</span><strong id="sumTotal">0</strong></div>
+              <button class="btn" data-go="apply">이 견적으로 신청</button>
+              <button class="btn line" id="copyBtn">견적 내용 복사</button>
+              <p class="hint">단위는 만원입니다. 부가세 별도.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <nav class="remote" id="remote">
+        <a href="#p-illust" class="here">일러스트</a>
+        <a href="#p-rig">리깅</a>
+        <a href="#p-calc">견적 계산</a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INFO ══ -->
+<div class="view" id="v-info">
+  <div class="wrap pad">
+    <div class="title-row"><h1 class="title">안내</h1><em>Information</em></div>
+
+    <div class="info-grid">
+      <h3>신청 안내</h3>
+      <ul>
+        <li>신청하시면 아래 내용을 모두 확인하고 동의하신 것으로 봅니다.</li>
+        <li>모든 작업물의 저작권은 UHI:ON에게 있습니다.</li>
+        <li>제작되는 작업물은 방송용 사용을 기준으로 합니다. 그 외 목적은 저작권 구매가 필요합니다.</li>
+        <li>작업 난이도에 따라 추가금이 발생할 수 있습니다.</li>
+        <li>완성본과 중간 과정은 포트폴리오와 홍보용 SNS에 올라갈 수 있습니다.</li>
+        <li>공개 날짜 지정이 가능하며 추가금이 발생합니다. 영구 비공개는 불가능합니다.</li>
+        <li>신청 내용과 상황에 따라 작업이 거절될 수 있습니다.</li>
+      </ul>
+    </div>
+
+    <div class="info-grid">
+      <h3>결제 · 환불</h3>
+      <ul>
+        <li>결제는 계좌이체로 진행됩니다.</li>
+        <li>견적 금액의 10%는 예약금이며 신청 취소 시 환불되지 않습니다.</li>
+        <li>견적 안내 후 24시간 이내 예약금 미입금 시 자동 취소되며 슬롯은 다음 신청자에게 넘어갑니다.</li>
+        <li>완성본은 잔금 결제 완료 후 전달됩니다.</li>
+        <li>작업 시작 이후의 환불은 진행 단계에 따라 산정됩니다.</li>
+      </ul>
+    </div>
+
+    <div class="info-grid">
+      <h3>작업 과정</h3>
+      <div class="steps">
+        <span>신청서 접수</span><span>견적 안내</span><span>예약금 입금</span><span>신청 확정</span>
+        <span>작업 진행</span><span>중간 컨펌</span><span>잔금 입금</span><span>작업물 전달</span>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <h3>컨펌 과정</h3>
+      <div>
+        <p class="sub">일러스트</p>
+        <div class="steps" style="margin-bottom:24px">
+          <span class="on2">1차 · 시안</span><span>디자인 확정 · 채색</span>
+          <span class="on2">2차 · 완성</span><span>파츠 분리</span><span class="on2">3차 · 전달</span>
+        </div>
+        <p class="sub">리깅 — 영상으로 진행됩니다</p>
+        <div class="steps">
+          <span class="on2">1차 · 얼굴</span><span>얼굴 · 몸 각도</span>
+          <span class="on2">2차 · 각도</span><span>추가 파츠</span><span class="on2">3차 · 전달</span>
+        </div>
+        <ul style="margin-top:24px">
+          <li>정해진 컨펌 단계 외에 별도 컨펌을 요청하시면 추가 비용이 발생할 수 있습니다.</li>
+          <li>다음 단계로 넘어간 뒤에는 이전 단계 수정이 불가능합니다.</li>
+          <li>수정 요청은 한 번에 정리해서 전달해 주세요.</li>
+          <li>컨펌 요청 후 3일 이내 답변이 없으면 수정사항이 없는 것으로 보고 다음 단계로 진행합니다.</li>
+          <li>컨펌 담당자는 한 분으로 정해 주세요.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <h3>사용 범위</h3>
+      <div>
+        <table>
+          <thead><tr><th>항목</th><th class="num">방송용</th><th class="num">개인세</th><th class="num">법인세</th></tr></thead>
+          <tbody>
+            <tr><td>추가금</td><td class="num">—</td><td class="num">30 + 일러 10%</td><td class="num">별도 문의</td></tr>
+            <tr><td>생방송</td><td class="num">O</td><td class="num">O</td><td class="num">O</td></tr>
+            <tr><td>유튜브</td><td class="num">O</td><td class="num">O</td><td class="num">O</td></tr>
+            <tr><td>타 작가 디자인 의뢰</td><td class="num">X</td><td class="num">O</td><td class="num">O</td></tr>
+            <tr><td>3D 제작</td><td class="num">X</td><td class="num">O</td><td class="num">O</td></tr>
+            <tr><td>굿즈 제작</td><td class="num">X</td><td class="num">O</td><td class="num">O</td></tr>
+            <tr><td>기업 사용</td><td class="num">X</td><td class="num">X</td><td class="num">O</td></tr>
+            <tr><td>AI 학습 이용</td><td class="num">X</td><td class="num">X</td><td class="num">별도 협의</td></tr>
+          </tbody>
+        </table>
+        <p class="sub" style="margin:16px 0 0">법인세는 사용 범위 · 기간 · 2차적저작물작성권 포함 여부에 따라 개별 산정됩니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APPLY ══ -->
+<div class="view" id="v-apply">
+  <div class="wrap pad">
+    <div class="apply-box">
+      <div class="big">COMMISSION <i class="open-only">OPEN</i><i class="closed-only">CLOSED</i></div>
+      <p class="open-only">예상 작업 시작일 · 2026년 10월</p>
+      <p class="closed-only">다음 오픈은 트위터로 공지됩니다</p>
+      <div class="acts">
+        <a class="btn sm" href="#" target="_blank">신청서 작성</a>
+        <a class="btn sm line" href="https://x.com/uhi_on" target="_blank" rel="noopener">문의하기</a>
+        <a class="btn sm line" href="#" target="_blank">옵션지 보기</a>
+      </div>
+    </div>
+    <footer>
+      <span>UHI:ON — Illustration &amp; Live2D Rigging</span>
+      <span>© UHI:ON. All rights reserved.</span>
+    </footer>
+  </div>
+</div>
+
+<div class="viewer" id="viewer">
+  <img id="viewerImg" alt="">
+  <button class="nav prev" id="vPrev" aria-label="이전">&#10094;</button>
+  <button class="nav next" id="vNext" aria-label="다음">&#10095;</button>
+  <button class="close" id="vClose" aria-label="닫기">&times;</button>
+  <div class="label"><span id="vLabel"></span><button id="vAll">전체 보기</button></div>
+</div>
+
+<script>
+const DATA = {
+  illust:[
+    {id:'i0', name:'선택 안 함', price:0},
+    {id:'i1', name:'비기닝 (반신)', price:60,  desc:'디자인 · 파츠분리'},
+    {id:'i2', name:'비기닝 (전신)', price:100, desc:'표정 2종 · 디자인 · 파츠분리'},
+    {id:'i3', name:'프리미엄 (반신)', price:90, desc:'표정 2종 · 디자인 · 파츠분리'},
+    {id:'i4', name:'프리미엄 (전신)', price:150, desc:'표정 4종 · 디자인 2종 · 파츠분리'}
+  ],
+  rig:[
+    {id:'r0', name:'선택 안 함', price:0},
+    {id:'r1', name:'비기닝 (반신)', price:60, grade:'beginning'},
+    {id:'r2', name:'비기닝 (전신)', price:90, grade:'beginning', desc:'얼굴 리깅 중심 · 각도 20도'},
+    {id:'r3', name:'프로 (전신)',   price:170, grade:'pro',      desc:'상반신 디테일업 · 머리카락 물리 · 각도 30도'},
+    {id:'r4', name:'프리미엄 (전신)', price:260, grade:'premium', desc:'전신 풀 퀄리티 · 어깨·골반 · 각도 45도'}
+  ],
+  splitFee:10,
+  setDiscount:{beginning:10, pro:15, premium:20},
+  options:[
+    {group:'표정', items:[
+      {name:'단축키 표정', il:2, rg:2},
+      {name:'애니메이션 표정', il:2, rg:6}
+    ]},
+    {group:'파츠', items:[
+      {name:'몸파츠', il:15, rg:15, hint:'노출도 낮을수록 인상'},
+      {name:'모자', il:6, rg:8},
+      {name:'헤드셋', il:8, rg:10},
+      {name:'헤일로', il:5, rg:6},
+      {name:'안경', il:6, rg:8},
+      {name:'귀걸이', il:2, rg:4},
+      {name:'동물귀 · 뿔 (표정 연동)', il:5, rg:10},
+      {name:'동물꼬리 (표정 연동)', il:6, rg:10},
+      {name:'날개 (표정 연동)', il:5, rg:10},
+      {name:'머리색 변경 (이펙트)', il:6, rg:10},
+      {name:'눈색 변경 (이펙트)', il:4, rg:8}
+    ]},
+    {group:'헤어', items:[
+      {name:'앞머리', il:8, rg:10},
+      {name:'뒷머리 — 숏컷 · 단발', il:12, rg:12},
+      {name:'뒷머리 — 긴머리', il:18, rg:16},
+      {name:'뒷머리 — 매우 긴머리', il:25, rg:20}
+    ]},
+    {group:'손동작', items:[
+      {name:'손동작', il:10, rg:8},
+      {name:'게임기 (버튼 연동)', il:10, rg:12},
+      {name:'마이크', il:9, rg:6},
+      {name:'오브젝트', il:10, rg:8}
+    ]},
+    {group:'트래킹', items:[
+      {name:'ios set', il:0, rg:20},
+      {name:'vbridger set', il:0, rg:25},
+      {name:'다가오기 (가치코이)', il:0, rg:40}
+    ]},
+    {group:'디테일 업', items:[
+      {name:'애니메이션 옵션', il:0, rg:20},
+      {name:'비대칭 포즈', il:20, rg:20},
+      {name:'의상 추가', il:30, rg:20},
+      {name:'모델 삼면도', il:40, rg:0}
+    ]}
+  ],
+  /* 작업물 — 위에 있는 것이 먼저 보임. 새 작업은 맨 위에 한 줄 추가하면 됨.
+     date 는 화면에 표시되는 값이라 형식을 자유롭게 써도 됨 */
+  works:[
+    {name:'홍율',        file:'hongyul',    date:'2026.08'},
+    {name:'트로이메라이', file:'traumerai',  date:'2026.07'},
+    {name:'유키',        file:'yuki',       date:'2026.06'},
+    {name:'여니언',      file:'yeonion',    date:'2026.05'},
+    {name:'유단',        file:'yudan',      date:'2026.04'},
+    {name:'홍연시',      file:'hongyeonsi', date:'2026.03'}
+  ],
+  /* 등급 카드 이미지 — 준비되면 images/ 안의 파일명을 적으면 그 자리에 나옴.
+     비워두면 이미지 없이 글자만 표시됨 */
+  tierShot:{beginning:'', pro:'', premium:''}
+};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const won = n => n.toLocaleString('ko-KR');
+
+/* ------------------------------------------------------------
+   화면 전환 — 상단 바는 그대로, 아래 .view 중 하나만 보임
+   data-go="price" 가 붙은 요소는 무엇이든 이동 버튼이 됨
+   ------------------------------------------------------------ */
+function go(name){
+  $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-'+name));
+  $$('#menu button').forEach(b => b.setAttribute('aria-current', b.dataset.go === name));
+  window.scrollTo(0,0);
+  history.replaceState(null,'','#'+name);
+}
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-go]');
+  if(t){ e.preventDefault(); go(t.dataset.go); }
+});
+if(location.hash){ const n = location.hash.slice(1); if($('#v-'+n)) go(n); }
+
+/* ------------------------------------------------------------
+   크게보기 — MAIN 과 WORK 가 같은 창을 함께 씀
+   ------------------------------------------------------------ */
+const viewer = (function(){
+  const box=$('#viewer'), img=$('#viewerImg'), label=$('#vLabel');
+  let i=0;
+  function show(n){
+    i=(n+DATA.works.length)%DATA.works.length;
+    const w=DATA.works[i];
+    img.src='images/sheet/'+w.file+'.jpg';
+    label.textContent=w.name+' · '+w.date;
+  }
+  function open(n){ show(n); box.classList.add('on'); document.body.style.overflow='hidden'; }
+  function close(){ box.classList.remove('on'); document.body.style.overflow=''; }
+  $('#vPrev').onclick=e=>{ e.stopPropagation(); show(i-1); };
+  $('#vNext').onclick=e=>{ e.stopPropagation(); show(i+1); };
+  $('#vClose').onclick=close;
+  $('#vAll').onclick=e=>{ e.stopPropagation(); close(); go('work'); };
+  box.onclick=e=>{ if(e.target===box||e.target===img) close(); };
+  document.addEventListener('keydown',e=>{
+    if(!box.classList.contains('on')) return;
+    if(e.key==='Escape') close();
+    if(e.key==='ArrowLeft') show(i-1);
+    if(e.key==='ArrowRight') show(i+1);
+  });
+  return {open};
+})();
+
+/* ------------------------------------------------------------
+   MAIN 쇼케이스 — 왼쪽으로 계속 흐름
+   같은 목록을 두 벌 이어붙이고 절반만큼 밀면, 끝나는 순간
+   처음과 모양이 같아서 끊김 없이 이어져 보임
+   마우스를 올리거나 손을 대면 멈추고, 누르면 크게 보임
+   ------------------------------------------------------------ */
+(function reel(){
+  const track=$('#track');
+  const one = DATA.works.map((w,n)=>`
+    <figure data-open="${n}">
+      <img src="images/sheet/${w.file}-s.jpg" alt="${w.name}" loading="lazy">
+      <figcaption><span>${w.name}</span><em>${w.date}</em></figcaption>
+    </figure>`).join('');
+  track.innerHTML = one + one;              // 두 벌
+
+  track.addEventListener('click', e=>{
+    const f=e.target.closest('[data-open]');
+    if(f) viewer.open(+f.dataset.open);
+  });
+  // 모바일 — 손을 대면 멈춤
+  const reelBox=$('#reel');
+  reelBox.addEventListener('touchstart',()=>track.classList.add('hold'),{passive:true});
+  reelBox.addEventListener('touchend',()=>setTimeout(()=>track.classList.remove('hold'),2500),{passive:true});
+})();
+
+/* ------------------------------------------------------------
+   WORK 목록
+   ------------------------------------------------------------ */
+$('#works').innerHTML = DATA.works.map((w,n)=>`
+  <figure data-open="${n}">
+    <img src="images/sheet/${w.file}-s.jpg" alt="${w.name}" loading="lazy">
+    <figcaption><span>${w.name}</span><em>${w.date}</em></figcaption>
+  </figure>`).join('');
+$('#works').addEventListener('click', e=>{
+  const f=e.target.closest('[data-open]');
+  if(f) viewer.open(+f.dataset.open);
+});
+
+/* ------------------------------------------------------------
+   PRICE — 등급 카드와 표
+   ------------------------------------------------------------ */
+(function priceView(){
+  const specs = {
+    beginning:['얼굴 XYZ 각도 20도','얼굴 리깅 중심','기본 물리'],
+    pro:['얼굴 XYZ 각도 30도','상반신 위주 디테일업','머리카락 · 리본 흔들림 물리'],
+    premium:['얼굴 XYZ 각도 45도','어깨 · 골반 움직임','각도에 따른 다리 모션','파츠마다 디테일']
+  };
+  $('#tierCards').innerHTML = DATA.rig.filter(r=>r.grade && r.name.includes('전신')).map(r=>`
+    <article class="tier ${r.grade==='pro'?'pick':''}">
+      ${DATA.tierShot[r.grade] ? `<div class="shot"><img src="images/${DATA.tierShot[r.grade]}.jpg" alt=""
+           loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : ''}
+      <h3>${r.name.replace(' (전신)','')}</h3>
+      <div class="amt">${r.price}<b> 만원</b></div>
+      <ul>${specs[r.grade].map(s=>`<li>${s}</li>`).join('')}</ul>
+    </article>`).join('');
+
+  function table(el, list, extra){
+    el.innerHTML = `<thead><tr><th>항목</th><th class="num">금액 (만원)</th></tr></thead><tbody>`
+      + list.filter(x=>x.price>0).map(r=>`<tr><td>${r.name}${r.desc?`<small>${r.desc}</small>`:''}</td>
+          <td class="num">${r.price}</td></tr>`).join('')
+      + (extra||'') + `</tbody>`;
+  }
+  table($('#tblIllust'), DATA.illust,
+    `<tr><td>프로 · 프리미엄 리깅 대응 파츠분리</td><td class="num">+${DATA.splitFee}</td></tr>`);
+  table($('#tblRig'), DATA.rig);
+
+  const p = t => `<p>${t}</p>`;
+  $('#noteIllust').innerHTML =
+    p(`프로 · 프리미엄 리깅을 함께 신청하시면 파츠를 더 세밀하게 나누는 작업이 필요해 일러스트에 ${DATA.splitFee}만원이 추가됩니다.`)
+    + p(`등급 차이는 나눠지는 파츠 수와 각도 대응 범위입니다. 두 등급 모두 같은 퀄리티로 작업됩니다.`);
+  $('#noteRig').innerHTML =
+    p(`세트 할인 — 일러스트와 함께 신청하시면 비기닝 10 · 프로 15 · 프리미엄 20만원 할인됩니다.`)
+    + p(`프로 리깅은 비기닝 · 프리미엄 일러스트 어느 쪽과도 조합 가능합니다.`);
+})();
+
+/* ------------------------------------------------------------
+   리모콘 — 화면을 내리면 지금 보는 곳을 표시
+   ------------------------------------------------------------ */
+(function remote(){
+  const links = $$('.remote a');
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting)
+        links.forEach(a=>a.classList.toggle('here', a.getAttribute('href') === '#'+en.target.id));
+    });
+  }, {rootMargin:'-25% 0px -60% 0px'});
+  ['p-illust','p-rig','p-calc'].forEach(id=>io.observe($('#'+id)));
+})();
+
+/* ------------------------------------------------------------
+   견적기 — 값이 바뀔 때마다 처음부터 다시 계산
+   ------------------------------------------------------------ */
+(function estimator(){
+  const selI = $('#selIllust'), selR = $('#selRig');
+  selI.innerHTML = DATA.illust.map(o=>`<option value="${o.id}">${o.name}${o.price?` — ${o.price}`:''}</option>`).join('');
+  selR.innerHTML = DATA.rig.map(o=>`<option value="${o.id}">${o.name}${o.price?` — ${o.price}`:''}</option>`).join('');
+
+  $('#optArea').innerHTML = DATA.options.map((g,gi)=>`
+    <div class="grp"><h4>${g.group}</h4>
+      ${g.items.map((it,ii)=>`
+        <div class="opt">
+          <span>${it.name}${it.hint?` <i>${it.hint}</i>`:''}</span>
+          <input type="number" min="0" max="20" step="1" value="0" data-g="${gi}" data-i="${ii}">
+        </div>`).join('')}
+    </div>`).join('');
+
+  function calc(){
+    const il = DATA.illust.find(o=>o.id===selI.value);
+    const rg = DATA.rig.find(o=>o.id===selR.value);
+    const hasI = il.price>0, hasR = rg.price>0;
+    const rows = [];
+    let base = 0;
+
+    if(hasI){ base += il.price; rows.push(['일러스트 '+il.name, il.price]); }
+    if(hasR){ base += rg.price; rows.push(['리깅 '+rg.name, rg.price]); }
+
+    if(hasI && hasR && (rg.grade==='pro' || rg.grade==='premium')){
+      base += DATA.splitFee; rows.push(['리깅 대응 파츠분리', DATA.splitFee]);
+    }
+
+    $$('#optArea input').forEach(inp=>{
+      const n = Math.max(0, parseInt(inp.value)||0);
+      if(!n) return;
+      const it = DATA.options[inp.dataset.g].items[inp.dataset.i];
+      const each = (hasI?it.il:0) + (hasR?it.rg:0);
+      if(each>0){ base += each*n; rows.push([`${it.name}${n>1?` ×${n}`:''}`, each*n]); }
+    });
+
+    let discount = 0;
+    if(hasI && hasR && rg.grade && !(rg.grade==='beginning' && rg.name.includes('반신'))){
+      discount = DATA.setDiscount[rg.grade] || 0;
+      if(discount) rows.push(['세트 할인', -discount]);
+    }
+    let sub = base - discount;
+
+    const rush = parseFloat($('#selRush').value);
+    if(rush){ const add = Math.round(sub*rush); sub += add; rows.push(['빠른마감', add]); }
+
+    const rights = $('#selRights').value;
+    let corp = false;
+    if(rights==='personal'){ const add = 30 + Math.round(il.price*0.1); sub += add; rows.push(['개인세', add]); }
+    if(rights==='corp'){ corp = true; rows.push(['법인세', '별도 문의']); }
+
+    const months = Math.max(0, parseInt($('#numHide').value)||0);
+    if(months){ sub += months*5; rows.push([`공개 연기 ${months}개월`, months*5]); }
+
+    $('#sumRows').innerHTML = rows.length
+      ? rows.map(([k,v])=>`<div class="row"><span>${k}</span><b>${typeof v==='number'?won(v):v}</b></div>`).join('')
+      : `<div class="row"><span>항목을 선택해 주세요</span><b></b></div>`;
+    $('#sumTotal').textContent = won(sub) + (corp?'+':'');
+  }
+
+  $$('#v-price select, #v-price input').forEach(el=>{
+    el.addEventListener('input', calc); el.addEventListener('change', calc);
+  });
+
+  $('#copyBtn').onclick = ()=>{
+    const lines = $$('#sumRows .row').map(r=>r.children[0].textContent+' : '+r.children[1].textContent);
+    navigator.clipboard.writeText(lines.join('\n')+'\n합계 : '+$('#sumTotal').textContent+'만원').then(()=>{
+      $('#copyBtn').textContent='복사됐습니다';
+      setTimeout(()=>$('#copyBtn').textContent='견적 내용 복사',1600);
+    });
+  };
+  calc();
+})();
+</script>
+</body>
+</html>
