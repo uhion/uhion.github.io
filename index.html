@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UHI:ON — Live2D Illustration · Rigging</title>
+<meta name="description" content="VTuber 일러스트와 Live2D 리깅 커미션. 등급별 가격과 견적 계산기를 확인하세요.">
+<meta property="og:title" content="UHI:ON — Illustration &amp; Live2D Rigging">
+<meta property="og:description" content="VTuber 일러스트와 Live2D 리깅 커미션. 등급별 가격과 견적 계산기를 확인하세요.">
+<meta property="og:image" content="images/sheet/hongyul-s.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -103,8 +109,13 @@ header{position:sticky;top:0;z-index:60;padding:16px 0 0;
   background:var(--white);border:1px solid var(--hair);border-radius:var(--pill);}
 .dots button{border:0;background:none;padding:0;cursor:pointer;font-size:13px;line-height:1;
   color:#CFC6DD;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s;}
-.dots button[aria-current="true"]{color:var(--mint);font-size:17px;transform:scale(1.3);
-  text-shadow:0 0 10px rgba(134,220,208,.7);}
+.dots button[aria-current="true"]{color:var(--mint);font-size:17px;animation:pop .45s ease;}
+@keyframes pop{
+  0%{transform:scale(.6) rotate(-25deg);opacity:.4;}
+  55%{transform:scale(1.5) rotate(8deg);opacity:1;}
+  100%{transform:scale(1.25) rotate(0);opacity:1;}
+}
+@media (prefers-reduced-motion:reduce){.dots button[aria-current="true"]{animation:none;transform:scale(1.25);}}
 
 .tools{display:flex;align-items:center;gap:10px;margin-top:16px;}
 .heart{width:44px;height:44px;border-radius:50%;background:var(--white);border:1px solid var(--hair);
@@ -161,6 +172,70 @@ button:focus-visible,a:focus-visible,select:focus,input:focus{outline:2.5px soli
 .works figcaption em{font-style:normal;color:var(--soft);font-family:'Outfit',sans-serif;font-size:13px;}
 
 
+
+/* ── 맨 위로 ─────────────────── */
+.totop{position:fixed;right:24px;bottom:24px;z-index:50;width:46px;height:46px;border-radius:50%;
+  background:var(--white);border:1px solid var(--hair);color:var(--ink);font-size:17px;cursor:pointer;
+  opacity:0;pointer-events:none;transition:.25s;box-shadow:0 6px 18px rgba(70,45,110,.1);}
+.totop.on{opacity:1;pointer-events:auto;}
+.totop:hover{background:var(--ink);color:var(--white);}
+
+/* ── 직접 만든 드롭다운 ─────────────────── */
+.pick{position:relative;}
+.pick>button{width:100%;text-align:left;font:inherit;font-size:14.5px;color:var(--ink);
+  background:var(--white);border:1px solid var(--hair);border-radius:16px;padding:13px 44px 13px 16px;
+  cursor:pointer;transition:.18s;}
+.pick>button:hover{border-color:var(--violet);}
+.pick>button::after{content:'';position:absolute;right:18px;top:50%;width:7px;height:7px;
+  border-right:1.6px solid var(--soft);border-bottom:1.6px solid var(--soft);
+  transform:translateY(-70%) rotate(45deg);transition:.2s;}
+.pick.open>button{border-color:var(--violet);}
+.pick.open>button::after{transform:translateY(-30%) rotate(225deg);}
+.pick .list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;display:none;
+  background:var(--white);border:1px solid var(--hair);border-radius:18px;padding:6px;
+  box-shadow:0 14px 34px rgba(70,45,110,.14);}
+.pick.open .list{display:block;}
+.pick .list button{display:flex;justify-content:space-between;gap:14px;width:100%;text-align:left;
+  font:inherit;font-size:14px;background:none;border:0;border-radius:12px;padding:11px 14px;cursor:pointer;}
+.pick .list button:hover{background:#F6F1FC;}
+.pick .list button[aria-selected="true"]{background:var(--ink);color:var(--white);}
+.pick .list button em{font-style:normal;font-family:'Outfit',sans-serif;color:var(--soft);}
+.pick .list button[aria-selected="true"] em{color:#C9BEDB;}
+
+/* ── 옵션 금액 · 많이 선택 ─────────────────── */
+.opt{grid-template-columns:1fr auto 62px;}
+.opt .price{font-family:'Outfit',sans-serif;font-size:13.5px;color:var(--soft);white-space:nowrap;}
+.hot{display:inline-block;margin-left:7px;font-size:10.5px;color:var(--violet);
+  background:#F3EEFA;border-radius:var(--pill);padding:2px 8px;vertical-align:1px;}
+
+/* ── 예시 견적 ─────────────────── */
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.presets button{border:1px solid var(--hair);background:var(--white);font:inherit;font-size:13px;
+  padding:10px 18px;border-radius:var(--pill);cursor:pointer;transition:.18s;}
+.presets button:hover{border-color:var(--violet);color:var(--violet);}
+.presets .lab{font-size:12.5px;color:var(--soft);align-self:center;margin-right:4px;}
+
+/* ── 합계 박스 추가분 ─────────────────── */
+.sum .dep{display:flex;justify-content:space-between;font-size:12.5px;color:var(--soft);margin-top:8px;}
+.sum .dep b{font-family:'Outfit',sans-serif;font-weight:600;color:var(--violet);}
+.sum .mini{display:flex;gap:6px;margin-top:14px;}
+.sum .mini button{flex:1;border:1px solid var(--hair);background:var(--white);font:inherit;font-size:12.5px;
+  padding:10px 6px;border-radius:var(--pill);cursor:pointer;transition:.18s;}
+.sum .mini button:hover{border-color:var(--ink);}
+
+/* ── 저장한 견적 비교 ─────────────────── */
+.saved{margin-top:22px;}
+.saved h3{font-size:16px;margin-bottom:12px;}
+.saved-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;}
+.saved-card{background:var(--white);border:1px solid var(--hair);border-radius:18px;padding:18px;position:relative;}
+.saved-card .x{position:absolute;top:12px;right:12px;border:0;background:none;color:var(--soft);
+  cursor:pointer;font-size:15px;line-height:1;}
+.saved-card .t{font-size:12.5px;color:var(--soft);}
+.saved-card .v{font-family:'Outfit',sans-serif;font-size:30px;font-weight:600;line-height:1.1;margin:4px 0 8px;}
+.saved-card ul{list-style:none;margin:0;padding:0;font-size:12px;color:var(--soft);}
+.saved-card li{display:flex;justify-content:space-between;gap:8px;padding:2px 0;}
+.saved-card li.diff{color:var(--violet);font-weight:600;}
+
 /* ── WORK 필터 ─────────────────── */
 .filters{display:flex;gap:7px;margin-bottom:24px;flex-wrap:wrap;}
 .filters button{border:1px solid var(--hair);background:var(--white);font:inherit;font-size:13.5px;
@@ -168,6 +243,8 @@ button:focus-visible,a:focus-visible,select:focus,input:focus{outline:2.5px soli
 .filters button:hover{color:var(--ink);}
 .filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--white);}
 .works .tag{color:var(--soft);font-size:12px;}
+.works video{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);background:var(--white);
+  border:1px solid var(--hair);cursor:zoom-in;}
 
 /* ── 접기 ─────────────────── */
 .fold{background:var(--white);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;}
@@ -388,27 +465,17 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
       <h2>견적 계산</h2>
       <div class="calc">
         <div class="card" style="padding:24px">
-          <div class="field"><label for="selIllust">일러스트</label><select id="selIllust"></select></div>
-          <div class="field"><label for="selRig">리깅</label><select id="selRig"></select></div>
+          <div class="presets" id="presets"><span class="lab">예시 견적</span></div>
+          <div class="field"><label>일러스트</label><div class="pick" id="pickIllust"></div></div>
+          <div class="field"><label>리깅</label><div class="pick" id="pickRig"></div></div>
           <div id="optArea"></div>
           <div class="grp">
             <h4>그 외</h4>
             <div class="field" style="margin-top:12px">
-              <label for="selRush">빠른마감</label>
-              <select id="selRush">
-                <option value="0">선택 안 함</option>
-                <option value="0.5">기간 절반에 납품 (+50%)</option>
-                <option value="0.8">기간 1/3에 납품 (+80%)</option>
-                <option value="0.9">기간 1/4에 납품 (+90%)</option>
-              </select>
+              <label>빠른마감</label><div class="pick" id="pickRush"></div>
             </div>
             <div class="field">
-              <label for="selRights">사용 범위</label>
-              <select id="selRights">
-                <option value="none">방송용 (추가금 없음)</option>
-                <option value="personal">개인세 (30 + 일러 금액의 10%)</option>
-                <option value="corp">법인세 (별도 문의)</option>
-              </select>
+              <label>사용 범위</label><div class="pick" id="pickRights"></div>
             </div>
             <div class="field">
               <label for="numHide">공개 연기 (개월 · 1개월당 5)</label>
@@ -419,10 +486,20 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
         <div class="sum">
           <div id="sumRows"></div>
           <div class="tot"><span>합계</span><strong id="sumTotal">0</strong></div>
+          <div class="dep"><span>예약금 10%</span><b id="sumDep">0</b></div>
           <button class="btn" data-go="apply">이 견적으로 신청</button>
-          <button class="btn line" id="copyBtn">견적 내용 복사</button>
-          <p class="hint">단위는 만원입니다. 부가세 별도.</p>
+          <div class="mini">
+            <button id="saveBtn">견적 저장</button>
+            <button id="copyBtn">복사</button>
+            <button id="imgBtn">이미지</button>
+            <button id="resetBtn">리셋</button>
+          </div>
+          <p class="hint">단위는 만원입니다. 부가세 별도.<br>실제 금액은 디자인 복잡도에 따라 조정될 수 있습니다.</p>
         </div>
+      </div>
+      <div class="saved" id="saved" style="display:none">
+        <h3>저장한 견적</h3>
+        <div class="saved-grid" id="savedGrid"></div>
       </div>
     </section>
 
@@ -456,7 +533,7 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
         <li>제작되는 작업물은 방송용 사용을 기준으로 합니다. 그 외 목적은 저작권 구매가 필요합니다.</li>
         <li>작업 난이도에 따라 추가금이 발생할 수 있습니다.</li>
         <li>완성본과 중간 과정은 포트폴리오와 홍보용 SNS에 올라갈 수 있습니다.</li>
-        <li>공개 날짜 지정이 가능하며 추가금이 발생합니다. 영구 비공개는 불가능합니다.</li>
+        <li>완성물 공유 후 한 달 동안 비공개가 가능하며, 그 이후 비공개를 원하시면 추가 비용이 발생합니다.</li>
         <li>신청 내용과 상황에 따라 작업이 거절될 수 있습니다.</li>
       </ul>
     </div>
@@ -466,7 +543,6 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
       <ul>
         <li>결제는 계좌이체로 진행됩니다.</li>
         <li>견적 금액의 10%는 예약금이며 신청 취소 시 환불되지 않습니다.</li>
-        <li>견적 안내 후 24시간 이내 예약금 미입금 시 자동 취소되며 슬롯은 다음 신청자에게 넘어갑니다.</li>
         <li>완성본은 잔금 결제 완료 후 전달됩니다.</li>
         <li>작업 시작 이후의 환불은 진행 단계에 따라 산정됩니다.</li>
       </ul>
@@ -495,10 +571,8 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
         </div>
         <ul style="margin-top:22px">
           <li>정해진 컨펌 단계 외에 별도 컨펌을 요청하시면 추가 비용이 발생할 수 있습니다.</li>
-          <li>다음 단계로 넘어간 뒤에는 이전 단계 수정이 불가능합니다.</li>
+          <li>다음 단계로 넘어간 뒤 이전 단계를 수정하시면 추가 비용이 발생할 수 있습니다.</li>
           <li>수정 요청은 한 번에 정리해서 전달해 주세요.</li>
-          <li>컨펌 요청 후 3일 이내 답변이 없으면 수정사항이 없는 것으로 보고 다음 단계로 진행합니다.</li>
-          <li>컨펌 담당자는 한 분으로 정해 주세요.</li>
         </ul>
       </div>
     </div>
@@ -535,7 +609,7 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
       <div class="acts">
         <a class="btn sm" href="#" target="_blank">신청서 작성</a>
         <a class="btn sm line" href="https://x.com/uhi_on" target="_blank" rel="noopener">문의하기</a>
-        <a class="btn sm line" href="#" target="_blank">옵션지 보기</a>
+        <button class="btn sm line" data-go="price">견적 계산기</button>
       </div>
     </div>
     <footer>
@@ -544,6 +618,8 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
     </footer>
   </div>
 </div>
+
+<button class="totop" id="toTop" aria-label="맨 위로">&#8593;</button>
 
 <div class="viewer" id="viewer">
   <div class="box"><img id="viewerImg" alt=""></div>
@@ -572,63 +648,85 @@ const DATA = {
     {id:'r3', name:'프로 (전신)',   price:170, grade:'pro',      desc:'상반신 디테일업 · 머리카락 물리 · 각도 30도'},
     {id:'r4', name:'시그니처 (전신)', price:260, grade:'signature', desc:'전신 풀 퀄리티 · 어깨·골반 · 각도 45도'}
   ],
-  /* 등급 머리글자 — 뱃지와 카드에 함께 쓰임 */
   letter:{beginning:'B', pro:'P', signature:'S'},
   splitFee:10,
   setDiscount:{beginning:10, pro:15, signature:20},
+  deposit:0.1,
+  /* 옵션 — il 일러 금액, rg 리깅 금액. hot:true 면 "많이 선택" 표시
+     from 은 최소금액(작업량에 따라 변동되는 항목) */
   options:[
     {group:'표정', items:[
       {name:'단축키 표정', il:2, rg:2},
-      {name:'애니메이션 표정', il:2, rg:6}
+      {name:'애니메이션 표정', il:2, rg:6, hot:true}
     ]},
     {group:'파츠', items:[
-      {name:'몸파츠', il:15, rg:15, hint:'노출도 낮을수록 인상'},
+      {name:'퍼스널 디자인', il:2, rg:0},
+      {name:'몸파츠', il:15, rg:15, hint:'노출도 낮을수록 인상', hot:true},
+      {name:'볼빵빵 · 혀', il:2, rg:0},
+      {name:'의상 복잡도 추가', il:10, rg:10, hint:'리본 · 레이스 등', from:true, hot:true},
+      {name:'겉옷 · 케이프', il:10, rg:10},
       {name:'모자', il:6, rg:8},
       {name:'헤드셋', il:8, rg:10},
       {name:'헤일로', il:5, rg:6},
       {name:'안경', il:6, rg:8},
-      {name:'귀걸이', il:2, rg:4},
+      {name:'귀걸이', il:2, rg:4, hot:true},
+      {name:'테이블 · 스탠드 마이크', il:10, rg:3},
+      {name:'펫', il:8, rg:3, hot:true},
+      {name:'얼굴 상처 · 밴드', il:3, rg:4, hot:true},
+      {name:'문신', il:3, rg:4, hint:'부위에 따라 변동', hot:true},
+      {name:'점', il:3, rg:3, hot:true},
+      {name:'동물귀 · 뿔 (기본)', il:5, rg:4},
       {name:'동물귀 · 뿔 (표정 연동)', il:5, rg:10},
+      {name:'동물꼬리 (기본)', il:6, rg:4},
       {name:'동물꼬리 (표정 연동)', il:6, rg:10},
+      {name:'날개 (기본)', il:5, rg:4},
       {name:'날개 (표정 연동)', il:5, rg:10},
+      {name:'머리색 변경 (기본)', il:6, rg:4},
       {name:'머리색 변경 (이펙트)', il:6, rg:10},
-      {name:'눈색 변경 (이펙트)', il:4, rg:8}
+      {name:'눈색 변경 (기본)', il:4, rg:4},
+      {name:'눈색 변경 (이펙트)', il:4, rg:8, hot:true}
     ]},
     {group:'헤어', items:[
-      {name:'앞머리', il:8, rg:10},
-      {name:'뒷머리 — 숏컷 · 단발', il:12, rg:12},
-      {name:'뒷머리 — 긴머리', il:18, rg:16},
-      {name:'뒷머리 — 매우 긴머리', il:25, rg:20}
+      {name:'앞머리', il:8, rg:10, hot:true},
+      {name:'뒷머리 — 숏컷 · 단발', il:12, rg:15},
+      {name:'뒷머리 — 긴머리 (허리까지)', il:18, rg:20},
+      {name:'뒷머리 — 매우 긴머리 (발끝까지)', il:25, rg:30}
     ]},
     {group:'손동작', items:[
-      {name:'손동작', il:10, rg:8},
+      {name:'손동작 (안녕손 · 하트손 등)', il:10, rg:8, hot:true},
+      {name:'게임기 (기본)', il:10, rg:6},
       {name:'게임기 (버튼 연동)', il:10, rg:12},
-      {name:'마이크', il:9, rg:6},
-      {name:'오브젝트', il:10, rg:8}
+      {name:'마이크 (기본)', il:9, rg:6, hot:true},
+      {name:'마이크 (디자인 포함)', il:12, rg:6},
+      {name:'오브젝트 (인형 · 책 · 타블렛 등)', il:10, rg:8}
     ]},
     {group:'트래킹', items:[
-      {name:'ios set', il:0, rg:20},
-      {name:'vbridger set', il:0, rg:25},
+      {name:'ios set', il:0, rg:20, hint:'볼부풀리기 · 메롱 · 입 삐죽', hot:true},
+      {name:'vbridger set', il:0, rg:25, hint:'아이우에오 · 앙다문입 · 오물오물', hot:true},
       {name:'다가오기 (가치코이)', il:0, rg:40}
     ]},
     {group:'디테일 업', items:[
       {name:'애니메이션 옵션', il:0, rg:20},
-      {name:'비대칭 포즈', il:20, rg:20},
+      {name:'작가오마카세', il:0, rg:40, hint:'작업량에 따라 40~120', from:true},
+      {name:'비대칭 포즈', il:20, rg:20, hot:true},
       {name:'의상 추가', il:30, rg:20},
       {name:'모델 삼면도', il:40, rg:0}
     ]}
   ],
-  /* 작업물 — 맨 위가 먼저 나옴. 새 작업은 위에 한 줄 추가.
-     file  : videos/○○.mp4 와 images/sheet/○○.jpg 의 이름
-     grade : 이 모델에 들어간 리깅 등급
-     tint  : 영상 옆에 은은하게 깔리는 색 (영상에서 뽑은 대표색) */
+  /* 예시 견적 — 누르면 아래 항목이 한 번에 채워짐 */
+  presets:[
+    {label:'비기닝 일러 + 프로 리깅', il:'i2', rg:'r3',
+     picks:['귀걸이','점','ios set','vbridger set','손동작 (안녕손 · 하트손 등)','마이크 (기본)','애니메이션 표정']},
+    {label:'시그니처 풀세트', il:'i4', rg:'r4',
+     picks:['귀걸이','눈색 변경 (이펙트)','몸파츠','ios set','vbridger set','비대칭 포즈','손동작 (안녕손 · 하트손 등)','마이크 (기본)']}
+  ],
   works:[
-    {name:'홍율',        en:'HONGYUL',    file:'hongyul',    date:'2026.08', grade:'signature', scope:['illust','rig'], tint:'#BD5F7A'},
+    {name:'홍율',        en:'HONGYUL',    file:'hongyul',    date:'2026.08', grade:'pro',       scope:['illust','rig'], tint:'#BD5F7A'},
     {name:'트로이메라이', en:'TRAUMERAI',  file:'traumerai',  date:'2026.07', grade:'pro',       scope:['illust','rig'], tint:'#4A3864'},
     {name:'유키',        en:'UENO YUKI',  file:'yuki',       date:'2026.06', grade:'pro',       scope:['illust','rig'], tint:'#7676B4'},
     {name:'여니언',      en:'YEONION',    file:'yeonion',    date:'2026.05', grade:'signature', scope:['illust','rig'], tint:'#E7B66C'},
     {name:'유단',        en:'YUDAN',      file:'yudan',      date:'2026.04', grade:'beginning', scope:['illust','rig'], tint:'#5883C6'},
-    {name:'홍연시',      en:'HONGYEONSI', file:'hongyeonsi', date:'2026.03', grade:'pro',       scope:['rig'],          tint:'#C2B723'}
+    {name:'홍연시',      en:'HONGYEONSI', file:'hongyeonsi', date:'2026.03', grade:'signature', scope:['rig'],          tint:'#C2B723'}
   ]
 };
 
@@ -766,14 +864,27 @@ const viewer = (function(){
     const list = DATA.works
       .map((w,n)=>({w,n}))
       .filter(({w}) => filter==='all' || w.scope.includes(filter));
-    box.innerHTML = list.map(({w,n})=>`
-      <figure data-open="${n}">
-        <img src="images/sheet/${w.file}-s.jpg" alt="${w.name}" loading="lazy">
+
+    // 리깅 탭에서는 움직임을 봐야 하므로 영상, 나머지는 쇼케이스 시트
+    box.innerHTML = list.map(({w,n})=>{
+      const media = filter==='rig'
+        ? `<video src="videos/${w.file}.mp4" muted loop playsinline preload="metadata"
+                  data-open="${n}"></video>`
+        : `<img src="images/sheet/${w.file}-s.jpg" alt="${w.name}" loading="lazy" data-open="${n}">`;
+      return `<figure>
+        ${media}
         <figcaption>
           <span>${w.name} <span class="tag">${w.scope.map(x=>scopeName[x]).join(' · ')}</span></span>
           <em>${w.date}</em>
         </figcaption>
-      </figure>`).join('');
+      </figure>`;
+    }).join('');
+
+    // 영상은 마우스를 올리면 재생
+    box.querySelectorAll('video').forEach(v=>{
+      v.addEventListener('mouseenter', ()=>v.play().catch(()=>{}));
+      v.addEventListener('mouseleave', ()=>{ v.pause(); v.currentTime=0; });
+    });
   }
 
   $('#filters').addEventListener('click', e=>{
@@ -827,28 +938,101 @@ const viewer = (function(){
 /* ------------------------------------------------------------
    견적기 — 값이 바뀔 때마다 처음부터 다시 계산
    ------------------------------------------------------------ */
-(function estimator(){
-  const selI = $('#selIllust'), selR = $('#selRig');
-  selI.innerHTML = DATA.illust.map(o=>`<option value="${o.id}">${o.name}${o.price?` — ${o.price}`:''}</option>`).join('');
-  selR.innerHTML = DATA.rig.map(o=>`<option value="${o.id}">${o.name}${o.price?` — ${o.price}`:''}</option>`).join('');
+/* ------------------------------------------------------------
+   드롭다운 만들기
+   브라우저 기본 select 는 모양을 못 바꿔서 직접 만듦.
+   make(붙일곳, 항목들, 처음값, 바뀔때할일) 형태로 씀
+   ------------------------------------------------------------ */
+function makePick(box, items, initial, onChange){
+  let cur = initial;
+  function label(){ const f=items.find(x=>x.value===cur); return f? f.text : ''; }
+  function right(){ const f=items.find(x=>x.value===cur); return f&&f.right? f.right : ''; }
+  function draw(){
+    box.innerHTML = `<button type="button">${label()}</button>
+      <div class="list">${items.map(o=>
+        `<button type="button" data-v="${o.value}" aria-selected="${o.value===cur}">
+           <span>${o.text}</span>${o.right?`<em>${o.right}</em>`:''}
+         </button>`).join('')}</div>`;
+  }
+  draw();
+  box.addEventListener('click', e=>{
+    const opt = e.target.closest('[data-v]');
+    if(opt){ cur = opt.dataset.v; box.classList.remove('open'); draw(); onChange(cur); return; }
+    if(e.target.closest('button')){
+      const wasOpen = box.classList.contains('open');
+      document.querySelectorAll('.pick').forEach(p=>p.classList.remove('open'));
+      if(!wasOpen) box.classList.add('open');
+    }
+  });
+  return { get:()=>cur, set:v=>{ cur=v; draw(); } };
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.pick')) document.querySelectorAll('.pick').forEach(p=>p.classList.remove('open'));
+});
 
-  // 옵션은 그룹별로 접어둠. 필요한 그룹만 열어보게 함
+/* ------------------------------------------------------------
+   견적기
+   값이 바뀔 때마다 calc() 가 처음부터 다시 계산함
+   ------------------------------------------------------------ */
+(function estimator(){
+  const rushList = [
+    {value:'0',   text:'선택 안 함'},
+    {value:'0.5', text:'기간 절반에 납품', right:'+50%'},
+    {value:'0.8', text:'기간 1/3에 납품',  right:'+80%'},
+    {value:'0.9', text:'기간 1/4에 납품',  right:'+90%'}
+  ];
+  const rightsList = [
+    {value:'none',     text:'방송용', right:'추가금 없음'},
+    {value:'personal', text:'개인세', right:'30 + 일러 10%'},
+    {value:'corp',     text:'법인세', right:'별도 문의'}
+  ];
+
+  const pickI = makePick($('#pickIllust'),
+    DATA.illust.map(o=>({value:o.id, text:o.name, right:o.price?o.price+'만원':''})), 'i0', calc);
+  const pickR = makePick($('#pickRig'),
+    DATA.rig.map(o=>({value:o.id, text:o.name, right:o.price?o.price+'만원':''})), 'r0', calc);
+  const pickRush   = makePick($('#pickRush'),   rushList,   '0',    calc);
+  const pickRights = makePick($('#pickRights'), rightsList, 'none', calc);
+
+  /* 옵션 목록 — 그룹별로 접어둠 */
   $('#optArea').innerHTML = `<div class="grp">` + DATA.options.map((g,gi)=>`
     <details>
       <summary>${g.group}<span class="picked" data-sum="${gi}"></span></summary>
-      ${g.items.map((it,ii)=>`
-        <div class="opt">
-          <span>${it.name}${it.hint?` <i>${it.hint}</i>`:''}</span>
+      ${g.items.map((it,ii)=>{
+        const p = [it.il?`일러 ${it.il}`:'', it.rg?`리깅 ${it.rg}`:''].filter(Boolean).join(' · ');
+        return `<div class="opt">
+          <span>${it.name}${it.hot?'<span class="hot">많이 선택</span>':''}${it.hint?` <i>${it.hint}</i>`:''}</span>
+          <span class="price">${p}${it.from?'~':''}</span>
           <input type="number" min="0" max="20" step="1" value="0" data-g="${gi}" data-i="${ii}">
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
     </details>`).join('') + `</div>`;
 
+  /* 예시 견적 */
+  $('#presets').insertAdjacentHTML('beforeend',
+    DATA.presets.map((p,n)=>`<button data-p="${n}">${p.label}</button>`).join(''));
+  $('#presets').addEventListener('click', e=>{
+    const b=e.target.closest('[data-p]'); if(!b) return;
+    const pre = DATA.presets[+b.dataset.p];
+    pickI.set(pre.il); pickR.set(pre.rg);
+    $$('#optArea input').forEach(x=>x.value=0);
+    DATA.options.forEach((g,gi)=>g.items.forEach((it,ii)=>{
+      if(pre.picks.includes(it.name)){
+        const el=$(`#optArea input[data-g="${gi}"][data-i="${ii}"]`);
+        if(el){ el.value=1; el.closest('details').open=true; }
+      }
+    }));
+    calc();
+  });
+
+  let last = {rows:[], total:0};
+
   function calc(){
-    const il = DATA.illust.find(o=>o.id===selI.value);
-    const rg = DATA.rig.find(o=>o.id===selR.value);
+    const il = DATA.illust.find(o=>o.id===pickI.get());
+    const rg = DATA.rig.find(o=>o.id===pickR.get());
     const hasI = il.price>0, hasR = rg.price>0;
     const rows = [];
-    let base = 0;
+    let base = 0, approx = false;
 
     if(hasI){ base += il.price; rows.push(['일러스트 '+il.name, il.price]); }
     if(hasR){ base += rg.price; rows.push(['리깅 '+rg.name, rg.price]); }
@@ -862,7 +1046,11 @@ const viewer = (function(){
       if(!n) return;
       const it = DATA.options[inp.dataset.g].items[inp.dataset.i];
       const each = (hasI?it.il:0) + (hasR?it.rg:0);
-      if(each>0){ base += each*n; rows.push([`${it.name}${n>1?` ×${n}`:''}`, each*n]); }
+      if(each>0){
+        base += each*n;
+        if(it.from) approx = true;
+        rows.push([`${it.name}${n>1?` ×${n}`:''}`, each*n]);
+      }
     });
 
     let discount = 0;
@@ -872,10 +1060,10 @@ const viewer = (function(){
     }
     let sub = base - discount;
 
-    const rush = parseFloat($('#selRush').value);
+    const rush = parseFloat(pickRush.get());
     if(rush){ const add = Math.round(sub*rush); sub += add; rows.push(['빠른마감', add]); }
 
-    const rights = $('#selRights').value;
+    const rights = pickRights.get();
     let corp = false;
     if(rights==='personal'){ const add = 30 + Math.round(il.price*0.1); sub += add; rows.push(['개인세', add]); }
     if(rights==='corp'){ corp = true; rows.push(['법인세', '별도 문의']); }
@@ -886,30 +1074,125 @@ const viewer = (function(){
     $('#sumRows').innerHTML = rows.length
       ? rows.map(([k,v])=>`<div class="row"><span>${k}</span><b>${typeof v==='number'?won(v):v}</b></div>`).join('')
       : `<div class="row"><span>항목을 선택해 주세요</span><b></b></div>`;
-    $('#sumTotal').textContent = won(sub) + (corp?'+':'');
+    const mark = (corp?'+':'') + (approx?'~':'');
+    $('#sumTotal').textContent = won(sub) + mark;
+    $('#sumDep').textContent   = won(Math.round(sub*DATA.deposit*10)/10) + '만원';
 
-    // 접힌 그룹에 몇 개 골랐는지 표시
     DATA.options.forEach((g,gi)=>{
       let cnt=0;
       $$(`#optArea input[data-g="${gi}"]`).forEach(x=>cnt += Math.max(0,parseInt(x.value)||0));
-      const tagEl=$(`[data-sum="${gi}"]`);
-      if(tagEl) tagEl.textContent = cnt ? cnt+'개 선택' : '';
+      const t=$(`[data-sum="${gi}"]`);
+      if(t) t.textContent = cnt ? cnt+'개' : '';
     });
+
+    last = {rows, total:sub, mark};
   }
 
-  $$('#v-price select, #v-price input').forEach(el=>{
+  $$('#v-price input').forEach(el=>{
     el.addEventListener('input', calc); el.addEventListener('change', calc);
   });
 
+  /* 리셋 */
+  $('#resetBtn').onclick = ()=>{
+    pickI.set('i0'); pickR.set('r0'); pickRush.set('0'); pickRights.set('none');
+    $('#numHide').value = 0;
+    $$('#optArea input').forEach(x=>x.value=0);
+    $$('#optArea details').forEach(d=>d.open=false);
+    calc();
+  };
+
+  /* 복사 */
   $('#copyBtn').onclick = ()=>{
-    const lines = $$('#sumRows .row').map(r=>r.children[0].textContent+' : '+r.children[1].textContent);
-    navigator.clipboard.writeText(lines.join('\n')+'\n합계 : '+$('#sumTotal').textContent+'만원').then(()=>{
-      $('#copyBtn').textContent='복사됐습니다';
-      setTimeout(()=>$('#copyBtn').textContent='견적 내용 복사',1600);
+    const text = last.rows.map(([k,v])=>k+' : '+(typeof v==='number'?won(v):v)).join('\n')
+      + '\n합계 : ' + won(last.total) + (last.mark||'') + '만원';
+    navigator.clipboard.writeText(text).then(()=>{
+      $('#copyBtn').textContent='복사됨';
+      setTimeout(()=>$('#copyBtn').textContent='복사',1500);
     });
   };
+
+  /* 이미지로 저장 — 화면에 그림을 그려서 png 로 내려받음 */
+  $('#imgBtn').onclick = ()=>{
+    const rows = last.rows;
+    const W=560, pad=36, lh=30, H = pad*2 + 96 + rows.length*lh + 70;
+    const cv = document.createElement('canvas');
+    const R = window.devicePixelRatio || 2;
+    cv.width = W*R; cv.height = H*R;
+    const g = cv.getContext('2d');
+    g.scale(R,R);
+    g.fillStyle='#FAF8FC'; g.fillRect(0,0,W,H);
+    g.fillStyle='#211B2E';
+    g.font='600 22px Outfit, sans-serif';
+    g.fillText('UHI:ON', pad, pad+16);
+    g.fillStyle='#8A7F9C'; g.font='13px Pretendard, sans-serif';
+    g.fillText('견적 계산 · 단위 만원', pad, pad+40);
+    g.strokeStyle='#E3DCEC'; g.beginPath(); g.moveTo(pad,pad+58); g.lineTo(W-pad,pad+58); g.stroke();
+
+    let y = pad+88;
+    rows.forEach(([k,v])=>{
+      g.fillStyle='#5B5270'; g.font='13.5px Pretendard, sans-serif';
+      g.fillText(k, pad, y);
+      g.fillStyle='#211B2E'; g.font='600 14px Outfit, sans-serif';
+      const t = typeof v==='number' ? won(v) : v;
+      g.fillText(t, W-pad-g.measureText(t).width, y);
+      y += lh;
+    });
+    g.strokeStyle='#E3DCEC'; g.beginPath(); g.moveTo(pad,y); g.lineTo(W-pad,y); g.stroke();
+    y += 34;
+    g.fillStyle='#8A7F9C'; g.font='13px Pretendard, sans-serif'; g.fillText('합계', pad, y);
+    g.fillStyle='#7E5CAF'; g.font='600 28px Outfit, sans-serif';
+    const tot = won(last.total)+(last.mark||'');
+    g.fillText(tot, W-pad-g.measureText(tot).width, y+4);
+
+    const a=document.createElement('a');
+    a.download='uhion-견적.png'; a.href=cv.toDataURL('image/png'); a.click();
+  };
+
+  /* 저장 · 비교 — 최대 3개 */
+  const saved=[];
+  $('#saveBtn').onclick = ()=>{
+    if(!last.rows.length) return;
+    if(saved.length>=3) saved.shift();
+    const il = DATA.illust.find(o=>o.id===pickI.get());
+    const rg = DATA.rig.find(o=>o.id===pickR.get());
+    saved.push({
+      title:[il.price?il.name:'', rg.price?rg.name:''].filter(Boolean).join(' + ') || '견적',
+      total:last.total, mark:last.mark||'',
+      rows:last.rows.filter(r=>typeof r[1]==='number')
+    });
+    drawSaved();
+  };
+  function drawSaved(){
+    $('#saved').style.display = saved.length ? 'block' : 'none';
+    // 저장본끼리 다른 항목은 색을 다르게 해서 비교하기 쉽게
+    const counts={};
+    saved.forEach(s=>s.rows.forEach(([k])=>counts[k]=(counts[k]||0)+1));
+    $('#savedGrid').innerHTML = saved.map((s,n)=>`
+      <div class="saved-card">
+        <button class="x" data-del="${n}" aria-label="삭제">&times;</button>
+        <div class="t">${s.title}</div>
+        <div class="v">${won(s.total)}${s.mark}</div>
+        <ul>${s.rows.map(([k,v])=>
+          `<li class="${counts[k]<saved.length?'diff':''}"><span>${k}</span><span>${won(v)}</span></li>`).join('')}</ul>
+      </div>`).join('');
+  }
+  $('#savedGrid').addEventListener('click', e=>{
+    const b=e.target.closest('[data-del]');
+    if(b){ saved.splice(+b.dataset.del,1); drawSaved(); }
+  });
+
   calc();
 })();
+
+/* ------------------------------------------------------------
+   맨 위로
+   ------------------------------------------------------------ */
+(function toTop(){
+  const b=$('#toTop');
+  window.addEventListener('scroll', ()=>b.classList.toggle('on', window.scrollY>420), {passive:true});
+  b.onclick=()=>window.scrollTo({top:0, behavior:'smooth'});
+})();
+
 </script>
 </body>
 </html>
