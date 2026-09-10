@@ -82,7 +82,8 @@ header{position:sticky;top:0;z-index:60;padding:16px 0 0;
   background:var(--white);border:1px solid var(--hair);overflow:hidden;}
 .frame .tint{position:absolute;inset:0;z-index:0;transition:background 1.1s ease;}
 .frame > *:not(.tint){position:relative;z-index:1;}
-.frame-grid{display:grid;grid-template-columns:1fr 336px;gap:26px;align-items:stretch;}
+.frame-grid{display:grid;grid-template-columns:1fr 336px;gap:26px;align-items:start;}
+.state{min-height:452px;}
 
 /* 왼쪽 — 영상과 그 위 알약들 */
 .left{position:relative;display:flex;flex-direction:column;}
@@ -100,15 +101,17 @@ header{position:sticky;top:0;z-index:60;padding:16px 0 0;
 
 .dots{align-self:flex-start;display:inline-flex;gap:12px;padding:11px 20px;
   background:var(--white);border:1px solid var(--hair);border-radius:var(--pill);}
-.dots button{border:0;background:none;padding:0;cursor:pointer;font-size:15px;line-height:1;
-  color:var(--hair);transition:.2s;}
-.dots button[aria-current="true"]{color:var(--mint);transform:scale(1.25);}
+.dots button{border:0;background:none;padding:0;cursor:pointer;font-size:13px;line-height:1;
+  color:#CFC6DD;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s;}
+.dots button[aria-current="true"]{color:var(--mint);font-size:17px;transform:scale(1.3);
+  text-shadow:0 0 10px rgba(134,220,208,.7);}
 
 .tools{display:flex;align-items:center;gap:10px;margin-top:16px;}
 .heart{width:44px;height:44px;border-radius:50%;background:var(--white);border:1px solid var(--hair);
-  display:grid;place-items:center;cursor:pointer;font-size:16px;color:var(--pink);
-  text-decoration:none;transition:.2s;}
+  display:grid;place-items:center;cursor:pointer;font-size:17px;color:var(--pink);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .2s;padding:0;}
 .heart:hover{background:#FDEFF5;}
+.heart[aria-pressed="true"]{background:#FDEFF5;transform:scale(1.12);}
 .more{margin-left:auto;padding:12px 24px;background:var(--white);border:1px solid var(--hair);
   border-radius:var(--pill);font:inherit;font-size:13.5px;cursor:pointer;transition:.2s;}
 .more:hover{background:var(--ink);color:var(--white);border-color:var(--ink);}
@@ -157,12 +160,36 @@ button:focus-visible,a:focus-visible,select:focus,input:focus{outline:2.5px soli
 .works figcaption{margin-top:11px;display:flex;justify-content:space-between;align-items:baseline;font-size:14px;}
 .works figcaption em{font-style:normal;color:var(--soft);font-family:'Outfit',sans-serif;font-size:13px;}
 
+
+/* ── WORK 필터 ─────────────────── */
+.filters{display:flex;gap:7px;margin-bottom:24px;flex-wrap:wrap;}
+.filters button{border:1px solid var(--hair);background:var(--white);font:inherit;font-size:13.5px;
+  padding:10px 22px;border-radius:var(--pill);cursor:pointer;color:var(--soft);transition:.18s;}
+.filters button:hover{color:var(--ink);}
+.filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--white);}
+.works .tag{color:var(--soft);font-size:12px;}
+
+/* ── 접기 ─────────────────── */
+.fold{background:var(--white);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;}
+.fold>summary{list-style:none;cursor:pointer;padding:20px 26px;font-size:15px;font-weight:600;
+  display:flex;align-items:center;justify-content:space-between;}
+.fold>summary::-webkit-details-marker{display:none;}
+.fold>summary::after{content:'+';font-family:'Outfit',sans-serif;font-size:20px;color:var(--soft);}
+.fold[open]>summary::after{content:'−';}
+.fold-body{padding:0 26px 26px;}
+.tbl-h{font-size:16px;margin:18px 0 12px;}
+.fold-body .card{border:0;padding:0;}
+
+/* 견적기 옵션 그룹 접기 */
+.grp details{border-top:1px solid var(--hair);}
+.grp summary{list-style:none;cursor:pointer;padding:14px 2px;font-size:13.5px;font-weight:600;
+  color:var(--violet);display:flex;align-items:center;justify-content:space-between;}
+.grp summary::-webkit-details-marker{display:none;}
+.grp summary::after{content:'+';font-family:'Outfit',sans-serif;font-size:17px;color:var(--soft);}
+.grp details[open] summary::after{content:'−';}
+.grp .picked{font-size:11.5px;color:var(--soft);font-weight:500;margin-left:auto;margin-right:10px;}
+
 /* ── PRICE ─────────────────── */
-.price-wrap{display:grid;grid-template-columns:1fr 148px;gap:44px;align-items:start;}
-.remote{position:sticky;top:150px;display:grid;gap:6px;}
-.remote a{text-decoration:none;color:var(--soft);font-size:13px;padding:10px 16px;
-  background:var(--white);border:1px solid var(--hair);border-radius:var(--pill);text-align:center;transition:.2s;}
-.remote a.here{background:var(--ink);border-color:var(--ink);color:var(--white);}
 .block{padding-bottom:60px;}
 .block h2{font-size:clamp(22px,2.8vw,30px);margin-bottom:20px;}
 
@@ -260,7 +287,6 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
   .event{max-width:calc(100% - 40px);margin-left:20px;}
   .works{grid-template-columns:1fr 1fr;gap:18px 14px;}
   .price-wrap,.calc{grid-template-columns:1fr;gap:24px;}
-  .remote{position:static;grid-auto-flow:column;}
   .sum{position:static;}
   .tiers{grid-template-columns:1fr;}
   .info-grid{grid-template-columns:1fr;gap:16px;padding:24px 22px;}
@@ -311,8 +337,8 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
           <div class="dots" id="dots"></div>
 
           <div class="tools">
-            <a class="heart" href="https://x.com/uhi_on" target="_blank" rel="noopener" aria-label="트위터">&#9825;</a>
-            <button class="more" data-go="work">더 보기 &rarr;</button>
+            <button class="heart" id="heart" aria-pressed="false" aria-label="좋아요">&#9825;</button>
+            <button class="more" data-go="work">포트폴리오 &rarr;</button>
           </div>
         </div>
 
@@ -325,15 +351,10 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
             <dt>Live2D</dt><dd>3~4주</dd>
             <dt>결제</dt><dd>예약금 10% · 잔금 완성 후</dd>
           </dl>
-          <p class="memo open-only">자세한 사항은 <a data-go="info" href="#info">INFO</a>를 확인해 주세요.</p>
           <p class="memo closed-only">다음 오픈은 <a href="https://x.com/uhi_on" target="_blank" rel="noopener">트위터</a>로 공지됩니다.</p>
           <div class="acts open-only">
             <a class="btn" href="#" target="_blank">신청하기</a>
             <button class="btn line" data-go="price">견적 계산</button>
-          </div>
-          <div class="acts closed-only">
-            <a class="btn" href="https://x.com/uhi_on" target="_blank" rel="noopener">트위터 보기</a>
-            <button class="btn line" data-go="price">가격 보기</button>
           </div>
         </aside>
       </div>
@@ -344,7 +365,12 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
 <!-- ══ WORK ══ -->
 <div class="view" id="v-work">
   <div class="wrap pad">
-    <div class="head"><h1>작업물</h1><em>SELECTED WORK</em></div>
+    <div class="head"><h1>포트폴리오</h1></div>
+    <div class="filters" id="filters">
+      <button data-f="all" aria-pressed="true">전체</button>
+      <button data-f="illust" aria-pressed="false">일러스트</button>
+      <button data-f="rig" aria-pressed="false">리깅</button>
+    </div>
     <div class="works" id="works"></div>
   </div>
 </div>
@@ -352,70 +378,68 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
 <!-- ══ PRICE ══ -->
 <div class="view" id="v-price">
   <div class="wrap pad">
-    <div class="price-wrap">
-      <div>
-        <section class="block" id="p-illust">
-          <h2>일러스트</h2>
-          <div class="card"><table id="tblIllust"></table></div>
-          <div class="foot" id="noteIllust"></div>
-        </section>
+    <div class="head"><h1>가격</h1></div>
 
-        <section class="block" id="p-rig">
-          <h2>리깅</h2>
-          <div class="tiers" id="tierCards"></div>
-          <div class="card"><table id="tblRig"></table></div>
-          <div class="foot" id="noteRig"></div>
-        </section>
+    <section class="block">
+      <div class="tiers" id="tierCards"></div>
+    </section>
 
-        <section class="block" id="p-calc">
-          <h2>견적 계산</h2>
-          <div class="calc">
-            <div class="card" style="padding:24px">
-              <div class="field"><label for="selIllust">일러스트</label><select id="selIllust"></select></div>
-              <div class="field"><label for="selRig">리깅</label><select id="selRig"></select></div>
-              <div id="optArea"></div>
-              <div class="grp">
-                <h4>그 외</h4>
-                <div class="field" style="margin-top:12px">
-                  <label for="selRush">빠른마감</label>
-                  <select id="selRush">
-                    <option value="0">선택 안 함</option>
-                    <option value="0.5">기간 절반에 납품 (+50%)</option>
-                    <option value="0.8">기간 1/3에 납품 (+80%)</option>
-                    <option value="0.9">기간 1/4에 납품 (+90%)</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="selRights">사용 범위</label>
-                  <select id="selRights">
-                    <option value="none">방송용 (추가금 없음)</option>
-                    <option value="personal">개인세 (30 + 일러 금액의 10%)</option>
-                    <option value="corp">법인세 (별도 문의)</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="numHide">공개 연기 (개월 · 1개월당 5)</label>
-                  <input type="number" id="numHide" min="0" max="12" step="1" value="0">
-                </div>
-              </div>
+    <section class="block">
+      <h2>견적 계산</h2>
+      <div class="calc">
+        <div class="card" style="padding:24px">
+          <div class="field"><label for="selIllust">일러스트</label><select id="selIllust"></select></div>
+          <div class="field"><label for="selRig">리깅</label><select id="selRig"></select></div>
+          <div id="optArea"></div>
+          <div class="grp">
+            <h4>그 외</h4>
+            <div class="field" style="margin-top:12px">
+              <label for="selRush">빠른마감</label>
+              <select id="selRush">
+                <option value="0">선택 안 함</option>
+                <option value="0.5">기간 절반에 납품 (+50%)</option>
+                <option value="0.8">기간 1/3에 납품 (+80%)</option>
+                <option value="0.9">기간 1/4에 납품 (+90%)</option>
+              </select>
             </div>
-            <div class="sum">
-              <div id="sumRows"></div>
-              <div class="tot"><span>합계</span><strong id="sumTotal">0</strong></div>
-              <button class="btn" data-go="apply">이 견적으로 신청</button>
-              <button class="btn line" id="copyBtn">견적 내용 복사</button>
-              <p class="hint">단위는 만원입니다. 부가세 별도.</p>
+            <div class="field">
+              <label for="selRights">사용 범위</label>
+              <select id="selRights">
+                <option value="none">방송용 (추가금 없음)</option>
+                <option value="personal">개인세 (30 + 일러 금액의 10%)</option>
+                <option value="corp">법인세 (별도 문의)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="numHide">공개 연기 (개월 · 1개월당 5)</label>
+              <input type="number" id="numHide" min="0" max="12" step="1" value="0">
             </div>
           </div>
-        </section>
+        </div>
+        <div class="sum">
+          <div id="sumRows"></div>
+          <div class="tot"><span>합계</span><strong id="sumTotal">0</strong></div>
+          <button class="btn" data-go="apply">이 견적으로 신청</button>
+          <button class="btn line" id="copyBtn">견적 내용 복사</button>
+          <p class="hint">단위는 만원입니다. 부가세 별도.</p>
+        </div>
       </div>
+    </section>
 
-      <nav class="remote" id="remote">
-        <a href="#p-illust" class="here">일러스트</a>
-        <a href="#p-rig">리깅</a>
-        <a href="#p-calc">견적</a>
-      </nav>
-    </div>
+    <section class="block">
+      <details class="fold">
+        <summary>전체 가격표 보기</summary>
+        <div class="fold-body">
+          <h3 class="tbl-h">일러스트</h3>
+          <div class="card"><table id="tblIllust"></table></div>
+          <div class="foot" id="noteIllust"></div>
+
+          <h3 class="tbl-h">리깅</h3>
+          <div class="card"><table id="tblRig"></table></div>
+          <div class="foot" id="noteRig"></div>
+        </div>
+      </details>
+    </section>
   </div>
 </div>
 
@@ -599,12 +623,12 @@ const DATA = {
      grade : 이 모델에 들어간 리깅 등급
      tint  : 영상 옆에 은은하게 깔리는 색 (영상에서 뽑은 대표색) */
   works:[
-    {name:'홍율',        en:'HONGYUL',    file:'hongyul',    date:'2026.08', grade:'pro',       tint:'#BD5F7A'},
-    {name:'트로이메라이', en:'TRAUMERAI',  file:'traumerai',  date:'2026.07', grade:'signature', tint:'#4A3864'},
-    {name:'유키',        en:'UENO YUKI',  file:'yuki',       date:'2026.06', grade:'signature', tint:'#7676B4'},
-    {name:'여니언',      en:'YEONION',    file:'yeonion',    date:'2026.05', grade:'pro',       tint:'#E7B66C'},
-    {name:'유단',        en:'YUDAN',      file:'yudan',      date:'2026.04', grade:'pro',       tint:'#5883C6'},
-    {name:'홍연시',      en:'HONGYEONSI', file:'hongyeonsi', date:'2026.03', grade:'beginning', tint:'#C2B723'}
+    {name:'홍율',        en:'HONGYUL',    file:'hongyul',    date:'2026.08', grade:'signature', scope:['illust','rig'], tint:'#BD5F7A'},
+    {name:'트로이메라이', en:'TRAUMERAI',  file:'traumerai',  date:'2026.07', grade:'pro',       scope:['illust','rig'], tint:'#4A3864'},
+    {name:'유키',        en:'UENO YUKI',  file:'yuki',       date:'2026.06', grade:'pro',       scope:['illust','rig'], tint:'#7676B4'},
+    {name:'여니언',      en:'YEONION',    file:'yeonion',    date:'2026.05', grade:'signature', scope:['illust','rig'], tint:'#E7B66C'},
+    {name:'유단',        en:'YUDAN',      file:'yudan',      date:'2026.04', grade:'beginning', scope:['illust','rig'], tint:'#5883C6'},
+    {name:'홍연시',      en:'HONGYEONSI', file:'hongyeonsi', date:'2026.03', grade:'pro',       scope:['rig'],          tint:'#C2B723'}
   ]
 };
 
@@ -670,7 +694,6 @@ const viewer = (function(){
     const v=document.createElement('video');
     v.src='videos/'+w.file+'.mp4';
     v.muted=true; v.loop=true; v.playsInline=true;
-    // 첫 영상만 미리 받고 나머지는 넘어갈 때 받음 — 처음 여는 속도를 위해
     v.preload = n===0 ? 'auto' : 'none';
     v.style.display='none';
     screen.appendChild(v);
@@ -678,7 +701,7 @@ const viewer = (function(){
 
   DATA.works.forEach((w,n)=>{
     const b=document.createElement('button');
-    b.textContent='✦';
+    b.textContent='○';
     b.setAttribute('aria-label', w.name);
     b.onclick=()=>{ show(n); reset(); };
     dots.appendChild(b);
@@ -689,16 +712,29 @@ const viewer = (function(){
     const w=DATA.works[n];
 
     [...screen.children].forEach((v,k)=>{
-      if(k===n){ v.style.display='block'; v.play().catch(()=>{}); }
-      else { v.style.display='none'; v.pause(); }
+      if(k===n){
+        v.style.display='block';
+        v.currentTime=0;          // 항상 처음부터
+        v.play().catch(()=>{});
+      }else{
+        v.style.display='none';
+        v.pause();
+      }
     });
-    [...dots.children].forEach((b,k)=>b.setAttribute('aria-current',k===n));
+    // 다음 영상을 미리 받아둠 — 넘어갈 때 끊기지 않게
+    const next=screen.children[(n+1)%DATA.works.length];
+    if(next && next.preload!=='auto'){ next.preload='auto'; next.load(); }
+
+    [...dots.children].forEach((b,k)=>{
+      const on = k===n;
+      b.textContent = on ? '✦' : '○';
+      b.setAttribute('aria-current', on);
+    });
 
     $('#badgeLetter').textContent = DATA.letter[w.grade];
     $('#badgeGrade').textContent  = gradeName[w.grade];
     $('#badgeName').textContent   = w.en;
 
-    // 오른쪽으로 캐릭터색이 은은하게 번지게. 흰색에서 시작해 20%까지만
     tint.style.background =
       `linear-gradient(100deg, #fff 32%, ${w.tint}14 62%, ${w.tint}33 100%)`;
   }
@@ -709,17 +745,49 @@ const viewer = (function(){
 })();
 
 /* ------------------------------------------------------------
+   하트 — 누르면 채워지고 다시 누르면 비워짐
+   ------------------------------------------------------------ */
+(function heart(){
+  const h=$('#heart');
+  h.onclick=()=>{
+    const on = h.getAttribute('aria-pressed')==='true';
+    h.setAttribute('aria-pressed', !on);
+    h.innerHTML = on ? '&#9825;' : '&#9829;';
+  };
+})();
+
+/* ------------------------------------------------------------
    WORK — 쇼케이스 시트 목록
    ------------------------------------------------------------ */
-$('#works').innerHTML = DATA.works.map((w,n)=>`
-  <figure data-open="${n}">
-    <img src="images/sheet/${w.file}-s.jpg" alt="${w.name}" loading="lazy">
-    <figcaption><span>${w.name}</span><em>${w.date}</em></figcaption>
-  </figure>`).join('');
-$('#works').addEventListener('click', e=>{
-  const f=e.target.closest('[data-open]');
-  if(f) viewer.open(+f.dataset.open);
-});
+(function workList(){
+  const box=$('#works'), scopeName={illust:'일러스트', rig:'리깅'};
+
+  function render(filter){
+    const list = DATA.works
+      .map((w,n)=>({w,n}))
+      .filter(({w}) => filter==='all' || w.scope.includes(filter));
+    box.innerHTML = list.map(({w,n})=>`
+      <figure data-open="${n}">
+        <img src="images/sheet/${w.file}-s.jpg" alt="${w.name}" loading="lazy">
+        <figcaption>
+          <span>${w.name} <span class="tag">${w.scope.map(x=>scopeName[x]).join(' · ')}</span></span>
+          <em>${w.date}</em>
+        </figcaption>
+      </figure>`).join('');
+  }
+
+  $('#filters').addEventListener('click', e=>{
+    const b=e.target.closest('[data-f]');
+    if(!b) return;
+    $$('#filters button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    render(b.dataset.f);
+  });
+  box.addEventListener('click', e=>{
+    const f=e.target.closest('[data-open]');
+    if(f) viewer.open(+f.dataset.open);
+  });
+  render('all');
+})();
 
 /* ------------------------------------------------------------
    PRICE — 등급 카드와 표
@@ -757,20 +825,6 @@ $('#works').addEventListener('click', e=>{
 })();
 
 /* ------------------------------------------------------------
-   리모콘 — 지금 보는 곳 표시
-   ------------------------------------------------------------ */
-(function remote(){
-  const links = $$('.remote a');
-  const io = new IntersectionObserver(entries=>{
-    entries.forEach(en=>{
-      if(en.isIntersecting)
-        links.forEach(a=>a.classList.toggle('here', a.getAttribute('href') === '#'+en.target.id));
-    });
-  }, {rootMargin:'-25% 0px -60% 0px'});
-  ['p-illust','p-rig','p-calc'].forEach(id=>io.observe($('#'+id)));
-})();
-
-/* ------------------------------------------------------------
    견적기 — 값이 바뀔 때마다 처음부터 다시 계산
    ------------------------------------------------------------ */
 (function estimator(){
@@ -778,14 +832,16 @@ $('#works').addEventListener('click', e=>{
   selI.innerHTML = DATA.illust.map(o=>`<option value="${o.id}">${o.name}${o.price?` — ${o.price}`:''}</option>`).join('');
   selR.innerHTML = DATA.rig.map(o=>`<option value="${o.id}">${o.name}${o.price?` — ${o.price}`:''}</option>`).join('');
 
-  $('#optArea').innerHTML = DATA.options.map((g,gi)=>`
-    <div class="grp"><h4>${g.group}</h4>
+  // 옵션은 그룹별로 접어둠. 필요한 그룹만 열어보게 함
+  $('#optArea').innerHTML = `<div class="grp">` + DATA.options.map((g,gi)=>`
+    <details>
+      <summary>${g.group}<span class="picked" data-sum="${gi}"></span></summary>
       ${g.items.map((it,ii)=>`
         <div class="opt">
           <span>${it.name}${it.hint?` <i>${it.hint}</i>`:''}</span>
           <input type="number" min="0" max="20" step="1" value="0" data-g="${gi}" data-i="${ii}">
         </div>`).join('')}
-    </div>`).join('');
+    </details>`).join('') + `</div>`;
 
   function calc(){
     const il = DATA.illust.find(o=>o.id===selI.value);
@@ -831,6 +887,14 @@ $('#works').addEventListener('click', e=>{
       ? rows.map(([k,v])=>`<div class="row"><span>${k}</span><b>${typeof v==='number'?won(v):v}</b></div>`).join('')
       : `<div class="row"><span>항목을 선택해 주세요</span><b></b></div>`;
     $('#sumTotal').textContent = won(sub) + (corp?'+':'');
+
+    // 접힌 그룹에 몇 개 골랐는지 표시
+    DATA.options.forEach((g,gi)=>{
+      let cnt=0;
+      $$(`#optArea input[data-g="${gi}"]`).forEach(x=>cnt += Math.max(0,parseInt(x.value)||0));
+      const tagEl=$(`[data-sum="${gi}"]`);
+      if(tagEl) tagEl.textContent = cnt ? cnt+'개 선택' : '';
+    });
   }
 
   $$('#v-price select, #v-price input').forEach(el=>{
