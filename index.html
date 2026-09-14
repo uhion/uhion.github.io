@@ -439,6 +439,109 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
 .option-preview-source{display:block;margin-top:9px;text-align:center;font-size:11px;color:var(--violet-d);}
 .option-preview-play{display:block;width:100%;margin-top:9px;border:1px solid var(--hair);border-radius:var(--pill);background:#F3EEFA;color:var(--violet-d);min-height:36px;font:inherit;font-size:12px;cursor:pointer;}
 .option-preview-trigger svg{width:16px;height:16px;flex-shrink:0;}
+
+/* 요청받은 저장 견적 위치와 비교 창 */
+.sum .row{line-height:1.5;}
+.sum .slots{margin:12px 0 0;padding:12px 0 0;border-top:1px solid var(--hair);border-radius:0;background:transparent;}
+.sum .mini{grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px;}
+.sum .mini button{min-height:44px;padding:8px 3px;font-size:11.5px;}
+.sum .mini button:last-child{grid-column:auto;}
+.slots-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.slots-heading h3{margin:0;font-size:13px;font-weight:600;}
+.slots-heading>span{font-size:11px;color:var(--soft);}
+.slot-row{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;}
+.slot-row .slot{display:flex;align-items:center;gap:0;padding:0;border-radius:14px;cursor:default;min-width:0;}
+.slot-row .slot-load{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1;min-width:0;min-height:44px;padding:7px 8px 7px 13px;border:0;background:transparent;color:var(--ink);text-align:left;font:inherit;font-size:12px;cursor:pointer;}
+.slot-row .slot-load b{font-size:16px;white-space:nowrap;}
+.slot-row .slot-load small{font:inherit;font-size:10px;font-weight:400;margin-left:3px;}
+.slot-row .slot .del{flex:none;min-width:36px;min-height:44px;padding:6px;color:var(--soft);font-size:18px;border-radius:0 14px 14px 0;}
+.cmp-open{width:100%;margin-top:10px;min-height:42px;}
+.cmp-open:disabled{color:var(--soft);cursor:default;border-color:var(--hair);}
+.estimate-comparison{width:min(1000px,calc(100vw - 40px));max-width:none;max-height:calc(100dvh - 40px);padding:24px;margin:auto;overflow:auto;border:1px solid var(--hair);border-radius:24px;background:var(--white);color:var(--ink);box-shadow:0 20px 70px #211b2e30;}
+.estimate-comparison::backdrop{background:#211b2e66;}
+.estimate-comparison[open]{display:flex;flex-direction:column;overflow:hidden;}
+.estimate-comparison>.cmp-head,.estimate-comparison>.cmp-description,.estimate-comparison>.cmp-pick{flex-shrink:0;}
+.cmp-head{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.cmp-head h2{margin:0;font-size:20px;}
+.cmp-head button{min-width:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--soft);font:inherit;font-size:26px;cursor:pointer;}
+.cmp-description{margin:4px 0 18px;color:var(--soft);font-size:12px;line-height:1.8;}
+.estimate-comparison .cmp-pick button{min-height:40px;}
+.estimate-comparison .cmp-grid{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:14px;align-items:start;overflow:auto;min-height:0;padding:2px;}
+.estimate-comparison .saved-card .v{margin:8px 0 20px;}
+.estimate-comparison .saved-card .v small{font-family:'Pretendard Variable',sans-serif;font-size:12px;font-weight:400;margin-left:5px;}
+.estimate-comparison .saved-card li{padding:6px 0;border-bottom:1px solid #f2edf7;}
+.estimate-comparison .saved-card li span:last-child{white-space:nowrap;}
+.cmp-load{margin-top:16px;width:100%;min-height:42px;border:1px solid var(--hair);border-radius:var(--pill);background:#F3EEFA;color:var(--violet-d);font:inherit;font-size:12px;cursor:pointer;}
+.cmp-empty{color:var(--soft);font-size:13px;}
+.estimate-comparison button:focus-visible,.slot-row button:focus-visible,.cmp-open:focus-visible{outline:2px solid var(--violet);outline-offset:2px;}
+@media(min-width:941px){.sum{display:flex;flex-direction:column;max-height:calc(100dvh - 174px);padding:20px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--hair) transparent;}.sum>*{flex-shrink:0;}.sum #sumRows{flex:0 1 auto;min-height:40px;max-height:140px;overflow:auto;scrollbar-width:thin;}.sum .tot{margin-top:12px;padding-top:12px;}}
+@media(max-width:640px){.estimate-comparison{width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:16px;border-radius:20px;}.cmp-head h2{font-size:18px;}.estimate-comparison .cmp-pick button,.cmp-load{min-height:44px;}}
+/* 모바일: 모든 메뉴를 한 화면에 표시하고 카드 양옆의 여백 확보 */
+@media(max-width:940px){
+  .wrap.pad{padding-left:24px;padding-right:24px;}
+  .frame-grid>* ,.calc>* ,.works>*{min-width:0;}
+}
+@media(max-width:640px){
+  .wrap{padding-left:16px;padding-right:16px;}
+  .wrap.pad{padding:24px 16px 48px;}
+  header{padding-top:10px;}
+  header .wrap{position:relative;}
+  .logo-row{padding:16px 14px;min-height:70px;margin-bottom:8px;}
+  .logo{font-size:24px;}
+  .logo small{font-size:6px;letter-spacing:.15em;}
+  .menu-row{padding:4px;overflow:visible;}
+  #menu{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:0;}
+  #menu button{min-width:0;min-height:44px;padding:8px 2px;font-size:11px;letter-spacing:.045em;white-space:nowrap;}
+  .menu-row .lang{position:absolute;right:27px;top:22px;margin:0;padding:0;gap:0;}
+  .menu-row .lang button{min-width:27px;min-height:32px;padding:6px 5px;font-size:10px;letter-spacing:0;}
+  .head{margin-bottom:20px;}
+  .block{padding-bottom:36px;}
+  .card,.tier,.sum{padding:20px 16px;}
+  .calc>.card{padding:20px 16px!important;}
+  .calc{gap:16px;}
+  .pick>button{font-size:14px;}
+  .pick .list button{padding:11px 9px;font-size:13px;gap:8px;align-items:start;}
+  .pick .list button span{min-width:0;overflow-wrap:anywhere;}
+  .pick .list button em{flex:none;white-space:nowrap;}
+  .opt{grid-template-columns:minmax(0,1fr) 52px;column-gap:9px;}
+  .opt input{min-height:44px;font-size:16px;}
+  .opt span{font-size:13px;}
+  .option-preview-trigger{margin-left:4px;padding:7px 9px;}
+  .presets .lab{flex-basis:100%;}
+  .presets button{max-width:100%;min-height:44px;font-size:12px;padding:9px 12px;}
+  .apply-box{padding:38px 20px;}
+  .apply-box .big{font-size:clamp(24px,7.8vw,42px);overflow-wrap:normal;}
+  .apply-box .big i.open-only{display:block;}
+  body.closed .apply-box .big i.open-only{display:none;}
+  .apply-box p{font-size:13px;margin:16px 0 24px;}
+  .apply-box .acts{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;}
+  .apply-box .acts .btn{width:100%;min-height:46px;}
+  footer{padding:22px 0 28px;display:grid;gap:6px;font-size:11px;overflow-wrap:anywhere;}
+  .works{gap:20px 12px;}
+  .works figcaption{display:grid;gap:3px;font-size:13px;}
+  .works figcaption em{font-size:11px;overflow-wrap:anywhere;}
+  .frame{padding:44px 16px 18px;}
+  .frame-grid{gap:18px;}
+  .state{min-height:0;padding:22px 18px;}
+  .state .when{font-size:18px;}
+  .state dl{margin:18px 0 20px;gap:8px 12px;}
+  .event{max-width:calc(100% - 20px);margin-left:10px;padding:10px 16px;font-size:12px;}
+  .event span{white-space:normal;overflow:visible;}
+  .badge{max-width:100%;gap:7px;padding-right:12px;}
+  .badge .g,.badge .n{font-size:11px;letter-spacing:.02em;}
+  .badge .n{overflow-wrap:anywhere;}
+  .more{padding:10px 14px;font-size:12px;}
+  .screen{margin:14px 0;}
+  .info-grid{padding:22px 18px;gap:12px;}
+  .info-grid ul{font-size:13px;}
+  .fold>summary{padding:18px 16px;font-size:14px;}
+  .fold-body{padding:0 16px 18px;}
+  .fold-body .card{overflow-x:auto;scrollbar-width:thin;}
+  .fold-body table{min-width:430px;font-size:13px;}
+  .mobile-table-hint{display:block!important;font-size:11px;color:var(--soft);margin:0 0 10px;}
+  .totop{width:42px;height:42px;right:14px;bottom:16px;}
+}
+
 </style>
 </head>
 <body>
@@ -466,7 +569,7 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
   <div class="wrap stage">
     <div class="event">
       <span class="star">✦</span>
-      <span>샘플 확보 기간 — 시그니처 등급 한정 할인 진행 중</span>
+      <span>일러스트 · 리깅 세트 주문 시 할인!</span>
     </div>
 
     <div class="frame">
@@ -535,15 +638,7 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
       <h2>견적 계산</h2>
       <div class="calc">
         <div class="card" style="padding:24px">
-          <div class="slots" id="slots" style="display:none">
-            <div class="slot-row" id="slotRow"></div>
-            <button class="cmp-open" id="cmpOpen">견적 비교하기</button>
-            <div class="cmp" id="cmp" style="display:none">
-              <div class="cmp-pick" id="cmpPick"></div>
-              <div class="cmp-grid" id="cmpGrid"></div>
-            </div>
-          </div>
-          <div class="presets" id="presets"><span class="lab">예시 견적</span></div>
+          <div class="presets" id="presets"><span class="lab">샘플 견적</span></div>
           <div class="field"><label>일러스트</label><div class="pick" id="pickIllust"></div></div>
           <div class="field"><label>리깅</label><div class="pick" id="pickRig"></div></div>
           <p class="option-preview-hint">샘플 버튼을 누르면 실제 움직임을 확인할 수 있어요.</p>
@@ -572,7 +667,12 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
             <button id="imgBtn">이미지 저장</button>
             <button id="resetBtn">리셋</button>
           </div>
-          <p class="hint">단위는 만원입니다. 부가세 별도.<br>실제 금액은 디자인 복잡도에 따라 조정될 수 있습니다.</p>
+          <div class="slots" id="slots" style="display:none">
+            <div class="slots-heading"><h3>저장한 견적</h3><span>최대 3개</span></div>
+            <div class="slot-row" id="slotRow"></div>
+            <button type="button" class="cmp-open" id="cmpOpen">견적 비교하기</button>
+          </div>
+          <p class="hint">단위는 만원입니다.<br>예약금은 전체 작업 금액에서 차감됩니다.<br>실제 금액은 디자인 복잡도에 따라 조정될 수 있습니다.</p>
         </div>
       </div>
 </section>
@@ -580,7 +680,7 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
     <section class="block">
       <details class="fold">
         <summary>전체 가격표 보기</summary>
-        <div class="fold-body">
+        <div class="fold-body"><p class="mobile-table-hint" style="display:none">표를 좌우로 밀면 전체 항목을 볼 수 있어요.</p>
           <h3 class="tbl-h">일러스트</h3>
           <div class="card"><table id="tblIllust"></table></div>
           <div class="foot" id="noteIllust"></div>
@@ -701,6 +801,13 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
   <button class="close" id="vClose" aria-label="닫기">&times;</button>
   <div class="label"><span id="vLabel"></span><button id="vAll">전체 보기</button></div>
 </div>
+
+<dialog class="estimate-comparison" id="cmpDialog" aria-labelledby="cmpTitle">
+  <div class="cmp-head"><h2 id="cmpTitle">저장 견적 비교</h2><button type="button" id="cmpClose" aria-label="견적 비교 닫기">×</button></div>
+  <p class="cmp-description">보고 싶은 견적을 골라 비교해 보세요. 다른 항목과 금액은 보라색으로 표시돼요.</p>
+  <div class="cmp-pick" id="cmpPick" role="group" aria-label="비교할 견적 선택"></div>
+  <div class="cmp-grid" id="cmpGrid"></div>
+</dialog>
 
 <script>
 /* ============================================================
@@ -1239,85 +1346,83 @@ document.addEventListener('click', e=>{
     a.download='uhion-견적.png'; a.href=cv.toDataURL('image/png'); a.click();
   };
 
-  /* 옵션 저장 — 최대 3개.
-     저장하면 견적기 위에 "옵션 1/2/3" 으로 뜨고, 누르면 그 견적이 다시 불러와짐 */
+  /* 저장 견적 — 계산기 안에 최대 3개를 모으고, 비교 창에서 나란히 확인 */
   const slots=[];
   const cmpOn=new Set();
+  let nextSlotId=1;
+  const cmpDialog=$('#cmpDialog'),cmpOpen=$('#cmpOpen');
+  let previousBodyOverflow='';
 
   function snapshot(){
     return {
-      il:pickI.get(), rg:pickR.get(), rush:pickRush.get(), rights:pickRights.get(),
-      months:$('#numHide').value,
-      opts:$$('#optArea input').map(x=>x.value),
-      total:last.total, mark:last.mark||'',
-      rows:last.rows.filter(r=>typeof r[1]==='number')
+      id:nextSlotId++,il:pickI.get(),rg:pickR.get(),rush:pickRush.get(),rights:pickRights.get(),
+      months:$('#numHide').value,opts:$$('#optArea input').map(x=>x.value),
+      total:last.total,mark:last.mark||'',rows:last.rows.map(r=>[...r])
     };
   }
   function restore(s){
-    pickI.set(s.il); pickR.set(s.rg); pickRush.set(s.rush); pickRights.set(s.rights);
-    $('#numHide').value = s.months;
-    $$('#optArea input').forEach((x,k)=>{
-      x.value = s.opts[k];
-      if(+s.opts[k] > 0) x.closest('details').open = true;
-    });
+    pickI.set(s.il);pickR.set(s.rg);pickRush.set(s.rush);pickRights.set(s.rights);
+    $('#numHide').value=s.months;
+    $$('#optArea input').forEach((x,k)=>{x.value=s.opts[k];if(+s.opts[k]>0)x.closest('details').open=true;});
     calc();
   }
-
-  $('#saveBtn').onclick = ()=>{
-    if(!last.rows.length) return;
-    if(slots.length>=3) slots.shift();
-    slots.push(snapshot());
-    drawSlots();
+  $('#saveBtn').onclick=()=>{
+    if(!last.rows.length)return;
+    if(slots.length>=3){const removed=slots.shift();cmpOn.delete(removed.id);}
+    slots.push(snapshot());drawSlots();
     $('#saveBtn').textContent='저장됨';
     setTimeout(()=>$('#saveBtn').textContent='옵션 저장',1400);
   };
-
   function drawSlots(){
-    $('#slots').style.display = slots.length ? 'block' : 'none';
-    $('#slotRow').innerHTML = slots.map((s,n)=>`
-      <span class="slot" data-load="${n}">옵션 ${n+1} <b>${won(s.total)}${s.mark}</b>
-        <button class="del" data-del="${n}" aria-label="삭제">&times;</button></span>`).join('');
-    // 지워진 옵션은 비교 선택에서도 빼기
-    [...cmpOn].forEach(v=>{ if(v>=slots.length) cmpOn.delete(v); });
-    drawCmp();
-  }
-  $('#slotRow').addEventListener('click', e=>{
-    const d=e.target.closest('[data-del]');
-    if(d){ e.stopPropagation(); slots.splice(+d.dataset.del,1); drawSlots(); return; }
-    const l=e.target.closest('[data-load]');
-    if(l) restore(slots[+l.dataset.load]);
-  });
-
-  /* 비교 — 보고 싶은 옵션을 골라 나란히 */
-  $('#cmpOpen').onclick = ()=>{
-    const box=$('#cmp');
-    const open = box.style.display!=='none';
-    box.style.display = open ? 'none' : 'block';
-    $('#cmpOpen').textContent = open ? '견적 비교하기' : '비교 닫기';
-    if(!open) drawCmp();
-  };
-  function drawCmp(){
-    $('#cmpPick').innerHTML = slots.map((s,n)=>
-      `<button data-cmp="${n}" aria-pressed="${cmpOn.has(n)}">옵션 ${n+1}</button>`).join('');
-    const picked = slots.map((s,n)=>({s,n})).filter(({n})=>cmpOn.has(n));
-    // 고른 것들 중 일부에만 있는 항목은 색을 달리해서 차이를 보이게
-    const cnt={};
-    picked.forEach(({s})=>s.rows.forEach(([k])=>cnt[k]=(cnt[k]||0)+1));
-    $('#cmpGrid').innerHTML = picked.map(({s,n})=>`
-      <div class="saved-card">
-        <div class="t">옵션 ${n+1}</div>
-        <div class="v">${won(s.total)}${s.mark}</div>
-        <ul>${s.rows.map(([k,v])=>
-          `<li class="${cnt[k]<picked.length?'diff':''}"><span>${k}</span><span>${won(v)}</span></li>`).join('')}</ul>
+    $('#slots').style.display=slots.length?'block':'none';
+    $('#slotRow').innerHTML=slots.map(s=>`
+      <div class="slot">
+        <button type="button" class="slot-load" data-load="${s.id}" aria-label="옵션 ${s.id}, ${won(s.total)}${s.mark}만원 불러오기">
+          <span>옵션 ${s.id}</span><b>${won(s.total)}${s.mark}<small>만원</small></b>
+        </button>
+        <button type="button" class="del" data-del="${s.id}" aria-label="옵션 ${s.id} 삭제">×</button>
       </div>`).join('');
-  }
-  $('#cmpPick').addEventListener('click', e=>{
-    const b=e.target.closest('[data-cmp]'); if(!b) return;
-    const n=+b.dataset.cmp;
-    cmpOn.has(n) ? cmpOn.delete(n) : cmpOn.add(n);
+    const valid=new Set(slots.map(s=>s.id));[...cmpOn].forEach(id=>{if(!valid.has(id))cmpOn.delete(id)});
+    cmpOpen.disabled=slots.length<2;
+    cmpOpen.textContent=slots.length<2?'2개부터 비교할 수 있어요':'견적 비교하기';
     drawCmp();
+  }
+  $('#slotRow').addEventListener('click',e=>{
+    const d=e.target.closest('[data-del]');
+    if(d){const index=slots.findIndex(s=>s.id===+d.dataset.del);if(index>=0){cmpOn.delete(slots[index].id);slots.splice(index,1);drawSlots();}return;}
+    const l=e.target.closest('[data-load]');if(l){const s=slots.find(s=>s.id===+l.dataset.load);if(s)restore(s);}
   });
-
+  cmpOpen.onclick=()=>{
+    if(slots.length<2)return;
+    if(!cmpOn.size)slots.forEach(s=>cmpOn.add(s.id));
+    drawCmp();previousBodyOverflow=document.body.style.overflow;document.body.style.overflow='hidden';
+    cmpDialog.showModal();
+  };
+  $('#cmpClose').onclick=()=>cmpDialog.close();
+  cmpDialog.addEventListener('close',()=>{document.body.style.overflow=previousBodyOverflow;cmpOpen.focus({preventScroll:true});});
+  cmpDialog.addEventListener('click',e=>{
+    if(e.target!==cmpDialog)return;const r=cmpDialog.getBoundingClientRect();
+    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)cmpDialog.close();
+  });
+  function drawCmp(){
+    $('#cmpPick').innerHTML=slots.map(s=>`<button type="button" data-cmp="${s.id}" aria-pressed="${cmpOn.has(s.id)}">옵션 ${s.id}</button>`).join('');
+    const picked=slots.filter(s=>cmpOn.has(s.id));
+    const values=new Map();picked.forEach(s=>s.rows.forEach(([k,v])=>{if(!values.has(k))values.set(k,[]);values.get(k).push(v)}));
+    $('#cmpGrid').innerHTML=picked.length?picked.map(s=>`
+      <div class="saved-card">
+        <div class="t">옵션 ${s.id}</div><div class="v">${won(s.total)}${s.mark}<small>만원</small></div>
+        <ul>${s.rows.map(([k,v])=>`<li class="${values.get(k).length<picked.length||new Set(values.get(k)).size>1?'diff':''}"><span>${k}</span><span>${won(v)}</span></li>`).join('')}</ul>
+        <button type="button" class="cmp-load" data-use="${s.id}">이 견적 불러오기</button>
+      </div>`).join(''):'<p class="cmp-empty">비교할 견적을 선택해 주세요.</p>';
+  }
+  $('#cmpPick').addEventListener('click',e=>{
+    const b=e.target.closest('[data-cmp]');if(!b)return;const id=+b.dataset.cmp;
+    cmpOn.has(id)?cmpOn.delete(id):cmpOn.add(id);drawCmp();
+    $('#cmpPick [data-cmp="'+id+'"]').focus({preventScroll:true});
+  });
+  $('#cmpGrid').addEventListener('click',e=>{
+    const b=e.target.closest('[data-use]');if(!b)return;const s=slots.find(s=>s.id===+b.dataset.use);if(s){restore(s);cmpDialog.close();}
+  });
   calc();
 })();
 
