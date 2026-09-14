@@ -1205,6 +1205,8 @@ const viewer = (function(){
   const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let now='all',category='virtual';
   const all=DATA.works.map((w,n)=>({w,n}));
+  const rigOrder=['홍연시','여니언','홍율','트로이메라이','유단','유키'];
+  const rigWorks=all.filter(({w})=>w.scope.includes('rig')).sort((a,b)=>rigOrder.indexOf(a.w.name)-rigOrder.indexOf(b.w.name));
 
   function card(w,n,kind){
     const media=kind==='video'
@@ -1252,7 +1254,7 @@ const viewer = (function(){
     pauseVideos();
     let html='';
     if(now!=='illust'){
-      html=showcaseHTML()+`<section class="work-section" aria-labelledby="rigHeading"><h2 id="rigHeading">리깅</h2><div class="works">${all.filter(({w})=>w.scope.includes('rig')).map(({w,n})=>card(w,n,'video')).join('')}</div></section>`;
+      html=showcaseHTML()+`<section class="work-section" aria-labelledby="rigHeading"><h2 id="rigHeading">리깅</h2><div class="works">${rigWorks.map(({w,n})=>card(w,n,'video')).join('')}</div></section>`;
     }
     if(now!=='rig'){
       html+=`<section class="work-section" aria-labelledby="illustrationHeading"><h2 id="illustrationHeading">일러스트</h2><div class="illustration-filters" role="group" aria-label="일러스트 분류">${categories.map(c=>`<button type="button" data-category="${c.id}" aria-pressed="${c.id===category}" aria-controls="illustrationGallery">${c.name}</button>`).join('')}</div><div id="illustrationGallery" aria-live="polite">${gallery()}</div></section>`;
