@@ -636,6 +636,11 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
  .illustration-filters button{font-size:12px;padding:8px 12px;min-height:44px;}
 }
 
+
+.tracking-comparison{padding:10px 0 14px;}
+.tracking-comparison .option-preview-trigger{margin-left:0;}
+.option-preview.is-comparison{width:760px;}
+.option-preview.is-comparison video{height:auto;aspect-ratio:16/9;max-height:60vh;object-fit:contain;}
 </style>
 </head>
 <body>
@@ -1831,9 +1836,9 @@ document.addEventListener('click', e=>{
     if(pinned&&!pin)return;
     cancelOpen();cancelClose();const changed=active!==item||popup.hidden;
     if(active&&active!==item)active.button.setAttribute('aria-expanded','false');
-    active=item;pinned=pin;popup.hidden=false;item.button.setAttribute('aria-expanded','true');
+    active=item;pinned=pin;popup.classList.toggle('is-comparison',!!item.comparison);popup.hidden=false;item.button.setAttribute('aria-expanded','true');
     if(changed){
-      userPaused=motion.matches;popup.querySelector('strong').textContent=item.name+' · 샘플';
+      userPaused=motion.matches;popup.querySelector('strong').textContent=item.comparison?item.name:item.name+' · 샘플';
       nav.hidden=item.files.length===1;
       nav.replaceChildren(...(nav.hidden?[]:item.files.map((file,i)=>{
         const b=document.createElement('button');b.type='button';b.textContent=file.caption;
@@ -1854,12 +1859,8 @@ document.addEventListener('click', e=>{
     cancelClose();if(pinned)return;
     closeTimer=setTimeout(()=>{if(!pinned&&!popup.matches(':hover')&&!popup.contains(document.activeElement)&&!(active&&active.button.matches(':hover')))close(false)},300);
   }
-  DATA.options.forEach((group,gi)=>group.items.forEach((option,ii)=>{
-    const files=previews[option.name];if(!files)return;
-    const quantity=document.querySelector('#optArea input[data-g="'+gi+'"][data-i="'+ii+'"]');if(!quantity)return;
-    const host=quantity.closest('.opt').firstElementChild,button=document.createElement('button');
-    button.type='button';button.className='option-preview-trigger';button.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="#756C7A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="1.75" width="12.5" height="12.5" rx="2"/><circle cx="10.6" cy="5.4" r="1.3"/><path d="m2.5 11 3.2-3.2 3 3 1.7-1.7 3.1 3.1"/></svg>샘플';button.setAttribute('aria-label',option.name+' 샘플 보기');button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls',popup.id);button.setAttribute('aria-expanded','false');host.append(button);
-    const item={name:option.name,files,host,button,quantity};
+  function bindPreview(item){
+    const {button}=item;
     button.addEventListener('pointerenter',()=>{
       if(!hover.matches||pinned)return;
       cancelOpen();cancelClose();
@@ -1869,7 +1870,27 @@ document.addEventListener('click', e=>{
     button.addEventListener('blur',()=>{if(active===item)scheduleClose()});
     button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(active===item&&pinned){close(true);return;}open(item,true);if(e.detail===0)closeButton.focus();});
     button.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();open(item,true);closeButton.focus();}});
+  }
+  DATA.options.forEach((group,gi)=>group.items.forEach((option,ii)=>{
+    const files=previews[option.name];if(!files)return;
+    const quantity=document.querySelector('#optArea input[data-g="'+gi+'"][data-i="'+ii+'"]');if(!quantity)return;
+    const host=quantity.closest('.opt').firstElementChild,button=document.createElement('button');
+    button.type='button';button.className='option-preview-trigger';button.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="#756C7A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="1.75" width="12.5" height="12.5" rx="2"/><circle cx="10.6" cy="5.4" r="1.3"/><path d="m2.5 11 3.2-3.2 3 3 1.7-1.7 3.1 3.1"/></svg>샘플';button.setAttribute('aria-label',option.name+' 샘플 보기');button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls',popup.id);button.setAttribute('aria-expanded','false');host.append(button);
+    bindPreview({name:option.name,files,host,button,quantity});
   }));
+
+  const comparisonQuantity=document.querySelector('#optArea input[data-g="4"][data-i="1"]');
+  if(comparisonQuantity){
+    const host=document.createElement('div');host.className='tracking-comparison';
+    const button=document.createElement('button');button.type='button';
+    button.className='option-preview-trigger';button.textContent='iOS · VBridger ON/OFF 비교';
+    button.setAttribute('aria-label','iOS · VBridger ON/OFF 비교 보기');
+    button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls',popup.id);button.setAttribute('aria-expanded','false');
+    host.append(button);comparisonQuantity.closest('.opt').after(host);
+    bindPreview({name:'iOS · VBridger ON/OFF 비교',comparison:true,host,button,quantity:comparisonQuantity,
+      files:[{src:'tracking-on-off.mp4',caption:'iOS · VBridger 적용 전후 비교'}]});
+  }
+
   popup.addEventListener('pointerenter',()=>{cancelOpen();cancelClose()});popup.addEventListener('pointerleave',scheduleClose);
   popup.addEventListener('focusin',cancelClose);popup.addEventListener('focusout',scheduleClose);
   popup.addEventListener('keydown',e=>{
