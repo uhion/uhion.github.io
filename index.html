@@ -646,6 +646,68 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
 .tracking-comparison .option-preview-trigger{margin-left:0;}
 .option-preview.is-comparison{width:760px;}
 .option-preview.is-comparison video{height:auto;aspect-ratio:16/9;max-height:60vh;object-fit:contain;}
+/* PRICE: scope and cost are visible before the option estimator. */
+.price-intro{margin:-4px 0 20px;color:var(--soft);font-size:14px;line-height:1.8;}
+.price-sheets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+.price-sheet{padding:24px;background:var(--white);border:1px solid var(--hair);border-radius:var(--r);min-width:0;}
+.price-sheet-head{padding-bottom:17px;border-bottom:1px solid var(--hair);}
+.price-sheet-head h2{font-size:23px;margin:0 0 5px;}
+.price-sheet-head>span{font-size:12px;color:var(--violet-d);}
+.base-price-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 0;border-bottom:1px solid var(--hair);}
+.base-price-row:last-child{border-bottom:0;}
+.base-price-row h3{margin:0;font:600 15px/1.6 'Pretendard Variable',sans-serif;}
+.base-price-row p{margin:4px 0 0;color:var(--soft);font-size:12px;line-height:1.7;}
+.base-price-amount{display:flex;align-items:baseline;gap:5px;white-space:nowrap;}
+.base-price-amount strong{font:600 29px/1.2 'Outfit',sans-serif;}
+.base-price-amount span{font-size:12px;color:var(--soft);}
+.price-sheet-note{margin:14px 0 0;padding-top:16px;border-top:1px solid var(--hair);font-size:12px;color:var(--soft);line-height:1.8;}
+.price-footnote{font-size:12px;color:var(--soft);line-height:1.9;margin:16px 0;}
+.rig-grade-guide{margin-top:18px;}
+.rig-grade-guide .tiers{margin-bottom:0;}
+.price-section-head{margin-bottom:19px;}
+.price-section-head h2{margin:0 0 5px;}
+.price-section-head>span{font-size:13px;color:var(--soft);}
+.set-price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.set-price-card{padding:22px;background:var(--white);border:1px solid var(--hair);border-radius:var(--r);}
+.set-price-card h3{font:600 15px/1.7 'Pretendard Variable',sans-serif;margin:0;}
+.set-total{display:flex;align-items:baseline;gap:6px;margin:14px 0 18px;}
+.set-total strong{font:600 34px/1 'Outfit',sans-serif;}
+.set-total span{font-size:12px;color:var(--soft);}
+.set-price-card dl{display:grid;gap:7px;margin:0;font-size:12px;color:var(--soft);}
+.set-price-card dl>div{display:flex;justify-content:space-between;gap:10px;}
+.set-price-card dd{margin:0;white-space:nowrap;}
+.set-price-card .set-discount{color:var(--violet-d);}
+.preset-context{margin:0 0 10px;font-size:12px;line-height:1.8;color:var(--soft);}
+#estimateTitle{scroll-margin-top:170px;}
+#estimateTitle:focus-visible{outline:2px solid var(--violet);outline-offset:6px;}
+.apply-prep{max-width:660px;margin:24px auto;padding:20px;border:1px solid var(--hair);border-radius:16px;text-align:left;background:#fcfafe;}
+.apply-prep h2{font:600 16px/1.6 'Pretendard Variable',sans-serif;margin:0 0 12px;}
+.apply-prep dl{display:grid;gap:12px;margin:0;}
+.apply-prep dl>div{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px;font-size:13px;line-height:1.8;}
+.apply-prep dt{font-weight:600;}
+.apply-prep dd{color:var(--soft);margin:0;}
+.apply-box .apply-prep p{font-size:12px;line-height:1.8;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--hair);}
+@media(max-width:760px){
+ .price-sheets{grid-template-columns:1fr;gap:16px;}
+ .price-sheet{padding:20px;}
+ .price-sheet-head h2{font-size:21px;}
+ .price-intro{font-size:13px;}
+ .set-price-grid{grid-template-columns:1fr;gap:12px;}
+ .set-price-card{padding:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 10px;align-items:start;}
+ .set-total{margin:4px 0 0;}
+ .set-total strong{font-size:30px;}
+ .set-price-card dl{grid-column:1/-1;border-top:1px solid var(--hair);padding-top:14px;}
+ .apply-prep{padding:16px;}
+ .apply-prep dl>div{grid-template-columns:1fr;gap:2px;}
+ #estimateTitle{scroll-margin-top:145px;}
+}
+@media(max-width:360px){
+ .base-price-row{gap:10px;}
+ .base-price-amount strong{font-size:25px;}
+ .set-price-card h3{font-size:14px;}
+ .set-total strong{font-size:26px;}
+}
+
 </style>
 </head>
 <body>
@@ -735,15 +797,39 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
   <div class="wrap pad">
     <div class="head"><h1>가격</h1></div>
 
-    <section class="block">
-      <div class="tiers" id="tierCards"></div>
+    <section class="block price-overview" aria-label="일러스트와 리깅 기본 가격">
+      <p class="price-intro">일러스트와 리깅은 각각 의뢰하거나 함께 의뢰할 수 있습니다.</p>
+      <div class="price-sheets">
+        <article class="price-sheet" aria-labelledby="illustPriceTitle">
+          <div class="price-sheet-head"><h2 id="illustPriceTitle">일러스트</h2><span>일러스트 단독 기준</span></div>
+          <div id="illustBasePrices"></div>
+          <p class="price-sheet-note">일러스트 등급은 파츠 수와 각도 대응 범위의 차이입니다. 두 등급 모두 같은 퀄리티로 작업됩니다.</p>
+        </article>
+        <article class="price-sheet" aria-labelledby="rigPriceTitle">
+          <div class="price-sheet-head"><h2 id="rigPriceTitle">Live2D 리깅</h2><span>리깅 단독 기준 · 일러스트 별도</span></div>
+          <div id="rigBasePrices"></div>
+        </article>
+      </div>
+      <p class="price-footnote" id="basePriceNote"></p>
+      <details class="fold rig-grade-guide">
+        <summary>전신 리깅 등급별 움직임 자세히 보기</summary>
+        <div class="fold-body"><div class="tiers" id="tierCards"></div></div>
+      </details>
+    </section>
+
+    <section class="block set-overview" aria-labelledby="setPriceTitle">
+      <div class="price-section-head"><h2 id="setPriceTitle">함께 의뢰할 때</h2><span>일러스트 + 리깅 · 전신 기본 조합 예시</span></div>
+      <div class="set-price-grid" id="setBasePrices"></div>
+      <p class="price-footnote">추가 옵션 · 빠른마감 · 사용 범위 추가금 · 공개 연기 비용은 제외한 금액입니다.<br>‘~’는 리깅 대응 파츠분리의 최소 추가금을 반영한 금액이며, 실제 견적은 디자인 복잡도에 따라 조정될 수 있습니다.</p>
+      <button type="button" class="btn line sm" id="goEstimate">옵션 선택해 견적 계산</button>
     </section>
 
     <section class="block">
-      <h2>견적 계산</h2>
+      <h2 id="estimateTitle" tabindex="-1">견적 계산</h2>
       <div class="calc">
         <div class="card" style="padding:24px">
-          <div class="presets" id="presets"><span class="lab">샘플 견적</span></div>
+          <p class="preset-context">아래는 선택 옵션을 포함한 예시 견적입니다. 원하는 구성으로 변경할 수 있습니다.</p>
+          <div class="presets" id="presets"><span class="lab">옵션 포함 예시</span></div>
           <div class="field"><label>일러스트</label><div class="pick" id="pickIllust"></div></div>
           <div class="field"><label>리깅</label><div class="pick" id="pickRig"></div></div>
           <p class="option-preview-hint">샘플 버튼을 누르면 실제 움직임을 확인할 수 있어요.</p>
@@ -919,6 +1005,15 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
         <p id="emailApplyStatus" class="email-apply-status" role="status" aria-live="polite"></p>
       </div>
 
+      <section class="apply-prep" aria-labelledby="applyPrepTitle">
+        <h2 id="applyPrepTitle">문의 전에 준비해 주세요</h2>
+        <dl>
+          <div><dt>작업 범위</dt><dd>일러스트만 / 리깅만 / 일러스트 + 리깅</dd></div>
+          <div><dt>캐릭터 자료</dt><dd>캐릭터 참고자료를 보내 주세요. 리깅만 의뢰할 때는 원화와 파츠분리 준비 상태도 알려 주세요.</dd></div>
+          <div><dt>희망 일정</dt><dd>원하는 작업 시작 시기와 모델을 사용할 날짜를 알려 주세요.</dd></div>
+        </dl>
+        <p>일러스트와 리깅을 함께 의뢰하는 경우, 전체 일정은 작업 범위와 원화 준비 상태를 확인한 뒤 안내드립니다.</p>
+      </section>
     </div>
     <footer>
       <span>UHI:ON — Illustration &amp; Live2D Rigging</span>
@@ -1316,6 +1411,44 @@ const viewer = (function(){
       <ul>${specs[r.grade].map(s=>`<li>${s}</li>`).join('')}</ul>
     </article>`).join('');
 
+  // Basic prices share the estimator's DATA; no separately maintained price list.
+  function baseRows(items){
+    return items.filter(item=>item.price>0).map(item=>`
+      <div class="base-price-row">
+        <div><h3>${item.name}</h3>${item.desc?`<p>${item.desc}</p>`:''}</div>
+        <div class="base-price-amount"><strong>${item.price}</strong><span>만원</span></div>
+      </div>`).join('');
+  }
+  $('#illustBasePrices').innerHTML=baseRows(DATA.illust);
+  $('#rigBasePrices').innerHTML=baseRows(DATA.rig);
+  $('#basePriceNote').textContent=`프로 · 시그니처 리깅을 일러스트와 함께 의뢰하면, 더 세밀한 파츠분리를 위해 일러스트에 ${DATA.splitFee}만원부터 추가됩니다.`;
+
+  const basicSets=[['i2','r2'],['i2','r3'],['i4','r4']];
+  $('#setBasePrices').innerHTML=basicSets.map(([illustId,rigId])=>{
+    const illust=DATA.illust.find(item=>item.id===illustId);
+    const rig=DATA.rig.find(item=>item.id===rigId);
+    const split=['pro','signature'].includes(rig.grade)?DATA.splitFee:0;
+    const discount=DATA.setDiscount[rig.grade]||0;
+    const total=illust.price+rig.price+split-discount;
+    const ilName=illust.name.replace(' (전신)','');
+    const rigName=rig.name.replace(' (전신)','');
+    return `<article class="set-price-card">
+      <h3>${ilName} 일러스트<br>+ ${rigName} 리깅</h3>
+      <p class="set-total"><strong>${total}${split?'~':''}</strong><span>만원</span></p>
+      <dl>
+        <div><dt>일러스트 · 전신</dt><dd>${illust.price}만원</dd></div>
+        <div><dt>리깅 · 전신</dt><dd>${rig.price}만원</dd></div>
+        ${split?`<div><dt>리깅 대응 파츠분리</dt><dd>+${split}~만원</dd></div>`:''}
+        <div class="set-discount"><dt>세트 할인</dt><dd>−${discount}만원</dd></div>
+      </dl>
+    </article>`;
+  }).join('');
+  $('#goEstimate').addEventListener('click',()=>{
+    const title=$('#estimateTitle');
+    title.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+    title.focus({preventScroll:true});
+  });
+
   function table(el, list, extra){
     el.innerHTML = `<thead><tr><th>항목</th><th class="num">금액 (만원)</th></tr></thead><tbody>`
       + list.filter(x=>x.price>0).map(r=>`<tr><td>${r.name}${r.desc?`<small>${r.desc}</small>`:''}</td>
@@ -1331,7 +1464,7 @@ const viewer = (function(){
     p(`프로 · 시그니처 리깅을 함께 신청하시면 파츠를 더 세밀하게 나누는 작업이 필요해 일러스트에 ${DATA.splitFee}만원부터 추가됩니다.`)
     + p(`등급 차이는 나눠지는 파츠 수와 각도 대응 범위입니다. 두 등급 모두 같은 퀄리티로 작업됩니다.`);
   $('#noteRig').innerHTML =
-    p(`세트 할인 — 일러스트와 함께 신청하시면 비기닝 10 · 프로 20 · 시그니처 40만원 할인됩니다.`)
+    p(`세트 할인 — 일러스트와 함께 전신 리깅을 신청하시면 비기닝 ${DATA.setDiscount.beginning} · 프로 ${DATA.setDiscount.pro} · 시그니처 ${DATA.setDiscount.signature}만원 할인됩니다. 비기닝 반신 리깅은 세트 할인 대상에서 제외됩니다.`)
     + p(`프로 리깅은 비기닝 · 시그니처 일러스트 어느 쪽과도 조합 가능합니다.`);
 })();
 
@@ -1550,7 +1683,7 @@ document.addEventListener('click', e=>{
     if(quote.rows.length){
       body.push('[선택 내역]',...quote.rows.map(([label,value])=>label+': '+(typeof value==='number'?won(value)+'만원'+(label.includes('(최소)')?'~':''):value)),'','합계: '+won(quote.total)+(quote.mark||'')+'만원');
     }else body.push('선택한 견적 항목 없음');
-    body.push('','캐릭터 자료:','희망 일정:');
+    body.push('','작업 범위 (일러스트 / 리깅 / 둘 다):','캐릭터 자료:','원화·파츠분리 준비 상태:','희망 일정 (작업 시작 / 사용 예정일):');
     return 'mailto:'+emailRecipient+'?subject='+encodeURIComponent('[UHI:ON] 커미션 신청')+'&body='+encodeURIComponent(body.join('\r\n'));
   }
   function prepareEmail(){const quote=emailQuote();emailLink.href=mailtoForQuote(quote);return quote;}
@@ -2008,7 +2141,7 @@ document.addEventListener('click', e=>{
   }
   const guide=document.createElement('section');guide.className='commission-guide';guide.id='commissionGuide';
   guide.innerHTML='<h3>어떤 작업을 준비하고 계신가요?</h3><div class="commission-guide-choices" role="group" aria-label="작업 준비 안내"><button type="button" data-guide="illust" aria-pressed="false">일러스트만</button><button type="button" data-guide="rig" aria-pressed="false">리깅만</button><button type="button" data-guide="both" aria-pressed="false">둘 다 함께</button></div><p aria-live="polite">원하는 작업을 고르면 준비할 내용과 견적 시작 위치를 안내해 드려요.</p><div class="commission-guide-links"></div>';
-  document.querySelector('#presets').before(guide);
+  document.querySelector('.preset-context').before(guide);
   const guideData={
     illust:{note:'캐릭터 외형 참고자료와 필요한 표정·의상을 정리해 주세요.',links:[['일러스트 선택으로','pickIllust']]},
     rig:{note:'리깅할 원화와 파츠 분리 상태, 원하는 움직임을 알려 주세요.',links:[['리깅 선택으로','pickRig']]},
