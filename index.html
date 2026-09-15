@@ -664,19 +664,31 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
 .price-footnote{font-size:12px;color:var(--soft);line-height:1.9;margin:16px 0;}
 .rig-grade-guide{margin-top:18px;}
 .rig-grade-guide .tiers{margin-bottom:0;}
-.price-section-head{margin-bottom:19px;}
-.price-section-head h2{margin:0 0 5px;}
-.price-section-head>span{font-size:13px;color:var(--soft);}
-.set-price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
-.set-price-card{padding:22px;background:var(--white);border:1px solid var(--hair);border-radius:var(--r);}
-.set-price-card h3{font:600 15px/1.7 'Pretendard Variable',sans-serif;margin:0;}
-.set-total{display:flex;align-items:baseline;gap:6px;margin:14px 0 18px;}
-.set-total strong{font:600 34px/1 'Outfit',sans-serif;}
-.set-total span{font-size:12px;color:var(--soft);}
-.set-price-card dl{display:grid;gap:7px;margin:0;font-size:12px;color:var(--soft);}
-.set-price-card dl>div{display:flex;justify-content:space-between;gap:10px;}
-.set-price-card dd{margin:0;white-space:nowrap;}
-.set-price-card .set-discount{color:var(--violet-d);}
+.set-overview{max-width:760px;padding-bottom:36px;}
+.price-section-head{display:flex;align-items:baseline;gap:8px 14px;flex-wrap:wrap;margin-bottom:10px;}
+.price-section-head h2{font:600 17px/1.6 'Pretendard Variable',sans-serif;margin:0;}
+.price-section-head>span{font-size:12px;color:var(--soft);}
+.set-price-table{width:100%;border-collapse:collapse;table-layout:auto;}
+.set-price-table th,.set-price-table td{padding:11px 0;border-bottom:1px solid var(--hair);background:transparent;font-size:13px;line-height:1.7;}
+.set-price-table th{font-weight:400;text-align:left;color:var(--ink);}
+.set-price-table th span{display:inline-block;}
+.set-price-table td{text-align:right;white-space:nowrap;padding-left:16px;color:var(--soft);}
+.set-price-table tr:last-child th,.set-price-table tr:last-child td{border-bottom:1px solid var(--hair);}
+.set-price-table strong{font:600 18px/1.4 'Outfit',sans-serif;color:var(--ink);}
+.set-price-note{font-size:11.5px;line-height:1.8;color:var(--soft);margin:10px 0 0;}
+.set-breakdown{margin-top:6px;}
+.set-breakdown summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:44px;width:fit-content;font-size:12px;color:var(--soft);}
+.set-breakdown summary::-webkit-details-marker{display:none;}
+.set-breakdown summary::after{content:'+';}
+.set-breakdown[open] summary::after{content:'−';}
+.set-breakdown-item{padding:12px 0;border-bottom:1px solid var(--hair);}
+.set-breakdown-item h3{font:500 12px/1.8 'Pretendard Variable',sans-serif;margin:0 0 7px;}
+.set-breakdown-item dl{display:flex;flex-wrap:wrap;gap:5px 18px;margin:0;font-size:11.5px;color:var(--soft);}
+.set-breakdown-item dl>div{display:flex;gap:6px;}
+.set-breakdown-item dd{margin:0;white-space:nowrap;}
+.set-breakdown-item .set-discount{color:var(--violet-d);}
+.set-breakdown summary:hover{color:var(--ink);}
+.set-breakdown summary:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:4px;}
 .preset-context{margin:0 0 10px;font-size:12px;line-height:1.8;color:var(--soft);}
 #estimateTitle{scroll-margin-top:170px;}
 #estimateTitle:focus-visible{outline:2px solid var(--violet);outline-offset:6px;}
@@ -692,11 +704,12 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
  .price-sheet{padding:20px;}
  .price-sheet-head h2{font-size:21px;}
  .price-intro{font-size:13px;}
- .set-price-grid{grid-template-columns:1fr;gap:12px;}
- .set-price-card{padding:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 10px;align-items:start;}
- .set-total{margin:4px 0 0;}
- .set-total strong{font-size:30px;}
- .set-price-card dl{grid-column:1/-1;border-top:1px solid var(--hair);padding-top:14px;}
+ .price-section-head{gap:4px 10px;}
+ .price-section-head h2{font-size:16px;}
+ .set-price-table th{font-size:12px;}
+ .set-price-table td{font-size:11.5px;padding-left:10px;}
+ .set-breakdown-item dl{display:grid;gap:5px;}
+ .set-breakdown-item dl>div{justify-content:space-between;}
  .apply-prep{padding:16px;}
  .apply-prep dl>div{grid-template-columns:1fr;gap:2px;}
  #estimateTitle{scroll-margin-top:145px;}
@@ -704,8 +717,6 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
 @media(max-width:360px){
  .base-price-row{gap:10px;}
  .base-price-amount strong{font-size:25px;}
- .set-price-card h3{font-size:14px;}
- .set-total strong{font-size:26px;}
 }
 
 </style>
@@ -818,10 +829,14 @@ footer{padding:30px 0 44px;font-size:12.5px;color:var(--soft);display:flex;justi
     </section>
 
     <section class="block set-overview" aria-labelledby="setPriceTitle">
-      <div class="price-section-head"><h2 id="setPriceTitle">함께 의뢰할 때</h2><span>일러스트 + 리깅 · 전신 기본 조합 예시</span></div>
-      <div class="set-price-grid" id="setBasePrices"></div>
-      <p class="price-footnote">추가 옵션 · 빠른마감 · 사용 범위 추가금 · 공개 연기 비용은 제외한 금액입니다.<br>‘~’는 리깅 대응 파츠분리의 최소 추가금을 반영한 금액이며, 실제 견적은 디자인 복잡도에 따라 조정될 수 있습니다.</p>
-      <button type="button" class="btn line sm" id="goEstimate">옵션 선택해 견적 계산</button>
+      <div class="price-section-head"><h2 id="setPriceTitle">함께 의뢰 시 기본 금액</h2><span>전신 · 조합 예시</span></div>
+      <table class="set-price-table" aria-labelledby="setPriceTitle"><tbody id="setBasePrices"></tbody></table>
+      <p class="set-price-note">세트 할인 반영 · 추가 옵션 별도. ‘~’는 파츠분리 최소 추가금을 포함한 금액입니다.</p>
+      <details class="set-breakdown">
+          <summary>금액 구성 보기</summary>
+          <div id="setPriceBreakdown"></div>
+          <p class="set-price-note">추가 옵션 · 빠른마감 · 사용 범위 추가금 · 공개 연기 비용은 제외한 금액입니다. 실제 견적은 디자인 복잡도에 따라 조정될 수 있습니다.</p>
+      </details>
     </section>
 
     <section class="block">
@@ -1424,7 +1439,7 @@ const viewer = (function(){
   $('#basePriceNote').textContent=`프로 · 시그니처 리깅을 일러스트와 함께 의뢰하면, 더 세밀한 파츠분리를 위해 일러스트에 ${DATA.splitFee}만원부터 추가됩니다.`;
 
   const basicSets=[['i2','r2'],['i2','r3'],['i4','r4']];
-  $('#setBasePrices').innerHTML=basicSets.map(([illustId,rigId])=>{
+  const setQuotes=basicSets.map(([illustId,rigId])=>{
     const illust=DATA.illust.find(item=>item.id===illustId);
     const rig=DATA.rig.find(item=>item.id===rigId);
     const split=['pro','signature'].includes(rig.grade)?DATA.splitFee:0;
@@ -1432,22 +1447,21 @@ const viewer = (function(){
     const total=illust.price+rig.price+split-discount;
     const ilName=illust.name.replace(' (전신)','');
     const rigName=rig.name.replace(' (전신)','');
-    return `<article class="set-price-card">
-      <h3>${ilName} 일러스트<br>+ ${rigName} 리깅</h3>
-      <p class="set-total"><strong>${total}${split?'~':''}</strong><span>만원</span></p>
+    return {illust,rig,split,discount,total,ilName,rigName};
+  });
+  $('#setBasePrices').innerHTML=setQuotes.map(q=>`
+    <tr><th scope="row"><span>${q.ilName} 일러스트</span> <span>+ ${q.rigName} 리깅</span></th>
+      <td><strong>${q.total}${q.split?'~':''}</strong> 만원</td></tr>`).join('');
+  $('#setPriceBreakdown').innerHTML=setQuotes.map(({illust,rig,split,discount,ilName,rigName})=>`
+    <div class="set-breakdown-item">
+      <h3>${ilName} 일러스트 + ${rigName} 리깅</h3>
       <dl>
         <div><dt>일러스트 · 전신</dt><dd>${illust.price}만원</dd></div>
         <div><dt>리깅 · 전신</dt><dd>${rig.price}만원</dd></div>
         ${split?`<div><dt>리깅 대응 파츠분리</dt><dd>+${split}~만원</dd></div>`:''}
         <div class="set-discount"><dt>세트 할인</dt><dd>−${discount}만원</dd></div>
       </dl>
-    </article>`;
-  }).join('');
-  $('#goEstimate').addEventListener('click',()=>{
-    const title=$('#estimateTitle');
-    title.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
-    title.focus({preventScroll:true});
-  });
+    </div>`).join('');
 
   function table(el, list, extra){
     el.innerHTML = `<thead><tr><th>항목</th><th class="num">금액 (만원)</th></tr></thead><tbody>`
